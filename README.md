@@ -5,3 +5,6 @@
 [![Coverage Status](https://coveralls.io/repos/madeleineudell/CombiOpt.jl/badge.svg?branch=master&service=github)](https://coveralls.io/github/madeleineudell/CombiOpt.jl?branch=master)
 
 [![codecov.io](http://codecov.io/github/madeleineudell/CombiOpt.jl/coverage.svg?branch=master)](http://codecov.io/github/madeleineudell/CombiOpt.jl?branch=master)
+
+CombiOpt is a Julia package for optimization over combinatorial structures.
+This package is under development and is not ready for usage yet.
