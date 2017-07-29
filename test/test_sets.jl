@@ -37,7 +37,7 @@ facts("Sets") do
     w2 = [2, 2]
     w3 = [-2, -1]
 
-    p1 = SubPoly(twodim, [1, 3])
+    p1 = SubPoly(twodim, [3, 1])
     @fact in(w1, p1) --> false
     @fact in(w2, p1) --> true
     @fact in(w3, p1) --> true
@@ -45,7 +45,7 @@ facts("Sets") do
     @fact fenchel(p1, w2) --> -Inf
     @fact fenchel(p1, w3) --> roughly(-7.0, TOL)
 
-    p2 = BasePoly(twodim, [1, 3])
+    p2 = BasePoly(twodim, [3, 1])
     @fact in(w1, p2) --> false
     @fact in(w2, p2) --> true
     @fact in(w3, p2) --> false
@@ -53,7 +53,7 @@ facts("Sets") do
     @fact fenchel(p2, w2) --> roughly(8.0, TOL)
     @fact fenchel(p2, w3) --> roughly(-7.0, TOL)
 
-    p3 = PosPoly(twodim, [1, 3])
+    p3 = PosPoly(twodim, [3, 1])
     @fact in(w1, p3) --> false
     @fact in(w2, p3) --> true
     @fact in(w3, p3) --> false
@@ -61,7 +61,7 @@ facts("Sets") do
     @fact fenchel(p3, w2) --> roughly(0.0, TOL)
     @fact fenchel(p3, w3) --> roughly(-7.0, TOL)
 
-    p4 = SymPoly(twodim, [1, 3])
+    p4 = SymPoly(twodim, [3, 1])
     @fact in(w1, p4) --> false
     @fact in(w2, p4) --> true
     @fact in(w3, p4) --> true

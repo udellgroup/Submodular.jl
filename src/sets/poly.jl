@@ -83,11 +83,12 @@ function in(w::AbstractVector, p::SubPoly)
   n = length(w)
   @assert length(p.V) == n
   checker = true
+  S = sort(p.V)
   ordering = sortperm(w, rev = true)
   h = 0
   ind = []
   for i = 1:length(w)
-    h += - p.f(p.V[ind]) - w[i] + p.f(p.V[push!(ind, ordering[i])])
+    h += - p.f(S[ind]) - w[i] + p.f(S[push!(ind, ordering[i])])
     if h < 0
       checker = false
       break
@@ -100,11 +101,12 @@ function in(w::AbstractVector, p::BasePoly)
   n = length(w)
   @assert length(p.V) == n
   checker = true
+  S = sort(p.V)
   ordering = sortperm(w, rev = true)
   h = 0
   ind = []
   for i = 1:length(w)
-    h += - p.f(p.V[ind]) - w[i] + p.f(p.V[push!(ind, ordering[i])])
+    h += - p.f(S[ind]) - w[i] + p.f(S[push!(ind, ordering[i])])
     if h < 0
       checker = false
       break
@@ -120,11 +122,12 @@ function in(w::AbstractVector, p::PosPoly)
   n = length(w)
   @assert length(p.V) == n
   checker = true
+  S = sort(p.V)
   ordering = sortperm(w, rev = true)
   h = 0
   ind = []
   for i = 1:length(w)
-    h += - p.f(p.V[ind]) - w[i] + p.f(p.V[push!(ind, ordering[i])])
+    h += - p.f(S[ind]) - w[i] + p.f(S[push!(ind, ordering[i])])
     if h < 0
       checker = false
       break
@@ -140,12 +143,13 @@ function in(u::AbstractVector, p::SymPoly)
   w = abs.(u)
   n = length(w)
   @assert length(p.V) == n
+  S = sort(p.V)
   checker = true
   ordering = sortperm(w, rev = true)
   h = 0
   ind = []
   for i = 1:length(w)
-    h += - p.f(p.V[ind]) - w[i] + p.f(p.V[push!(ind, ordering[i])])
+    h += - p.f(S[ind]) - w[i] + p.f(S[push!(ind, ordering[i])])
     if h < 0
       checker = false
       break
