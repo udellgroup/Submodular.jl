@@ -5,8 +5,11 @@ import Convex: AbstractExpr
 
 abstract type CombiSet end
 
-### Combinatorial functions, the general type of combinatorial fucntions
-type CombiFunc <: AbstractExpr
+### Combinatorial functions
+abstract type CombiFunc <: AbstractExpr end
+
+# the type of generic combinatorial fucntions
+type GenCombi <: AbstractExpr
   head::Symbol
   id_hash::UInt64
   children::Tuple{AbstractExpr}
