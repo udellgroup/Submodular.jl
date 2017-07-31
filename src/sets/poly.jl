@@ -17,7 +17,7 @@ import Base.in
 export SubPoly, BasePoly, PosPoly, SymPoly
 export in, fenchel
 
-type SubPoly
+type SubPoly <: CombiSet
   f::Function # the submodular function
   V::AbstractVector # indexes of the base set
 
@@ -32,7 +32,7 @@ type SubPoly
   end
 end
 
-type BasePoly # throw errors if f is not defined on V
+type BasePoly <: CombiSet
   f::Function
   V::AbstractVector
 
@@ -47,7 +47,7 @@ type BasePoly # throw errors if f is not defined on V
   end
 end
 
-type PosPoly # throw errors if f is not defined on V
+type PosPoly <: CombiSet
   f::Function
   V::Array{Int}
 
@@ -62,7 +62,7 @@ type PosPoly # throw errors if f is not defined on V
   end
 end
 
-type SymPoly # throw errors if f is not defined on V
+type SymPoly <: CombiSet
   f::Function
   V::AbstractVector
 
@@ -77,41 +77,27 @@ type SymPoly # throw errors if f is not defined on V
   end
 end
 
-# check if u is in p
+# check if w is in p
 
-function in(w::AbstractVector, p::SubPoly)
+function in(w::AbstractVector, p::SubPoly) # SLOW??
   n = length(w)
   @assert length(p.V) == n
-  checker = true
-  S = sort(p.V)
-  ordering = sortperm(w, rev = true)
-  h = 0
-  ind = []
-  for i = 1:length(w)
-    h += - p.f(S[ind]) - w[i] + p.f(S[push!(ind, ordering[i])])
-    if h < 0
-      checker = false
-      break
+  checker = (p.f(p.V) >= sum(w))
+  if  n > 1 && checker == true
+    S = sort(p.V)
+    for i = 1:n
+      w1 = copy(w)
+      S1 = copy(S)
+      q = SubPoly(p.f, deleteat!(S1, i))
+      checker *= in(deleteat!(w1, i), q)
     end
   end
   return checker
 end
 
 function in(w::AbstractVector, p::BasePoly)
-  n = length(w)
-  @assert length(p.V) == n
-  checker = true
-  S = sort(p.V)
-  ordering = sortperm(w, rev = true)
-  h = 0
-  ind = []
-  for i = 1:length(w)
-    h += - p.f(S[ind]) - w[i] + p.f(S[push!(ind, ordering[i])])
-    if h < 0
-      checker = false
-      break
-    end
-  end
+  q = SubPoly(p.f, p.V)
+  checker = in(w, q)
   if checker == true
     checker = (sum(w) == p.f(p.V))
   end
@@ -119,20 +105,8 @@ function in(w::AbstractVector, p::BasePoly)
 end
 
 function in(w::AbstractVector, p::PosPoly)
-  n = length(w)
-  @assert length(p.V) == n
-  checker = true
-  S = sort(p.V)
-  ordering = sortperm(w, rev = true)
-  h = 0
-  ind = []
-  for i = 1:length(w)
-    h += - p.f(S[ind]) - w[i] + p.f(S[push!(ind, ordering[i])])
-    if h < 0
-      checker = false
-      break
-    end
-  end
+  q = SubPoly(p.f, p.V)
+  checker = in(w, q)
   if checker == true
     checker = all(x -> x>=0, w)
   end
@@ -141,26 +115,15 @@ end
 
 function in(u::AbstractVector, p::SymPoly)
   w = abs.(u)
-  n = length(w)
-  @assert length(p.V) == n
-  S = sort(p.V)
-  checker = true
-  ordering = sortperm(w, rev = true)
-  h = 0
-  ind = []
-  for i = 1:length(w)
-    h += - p.f(S[ind]) - w[i] + p.f(S[push!(ind, ordering[i])])
-    if h < 0
-      checker = false
-      break
-    end
-  end
+  q = SubPoly(p.f, p.V)
+  checker = in(w, q)
   return checker
 end
 
-# compute min c^x st p
-# fenchel(p, u) = -lovaszext(p.f, p.V, -u), u is nonpositve,
-#               = -Inf,                     u is not nonpositive
+# compute min w^x st x in p
+
+# fenchel(p, w) = -lovaszext(p.f, -w, p.V), w is nonpositve,
+#               = -Inf,                     w is not nonpositive
 function fenchel(p::SubPoly, w::AbstractVector)
   n = length(w)
   @assert length(p.V) == n
@@ -171,14 +134,14 @@ function fenchel(p::SubPoly, w::AbstractVector)
   end
 end
 
-# fenchel(p, u) = -lovaszext(p.f, p.V, -u)
+# fenchel(p, w) = -lovaszext(p.f, -w, p.V)
 function fenchel(p::BasePoly, w::AbstractVector)
   n = length(w)
   @assert length(p.V) == n
   return -lovaszext(p.f, -w, p.V)
 end
 
-# fenchel(p, u) = -lovaszext(p.f, p.V, -u_{+})
+# fenchel(p, w) = -lovaszext(p.f, -w_{+}, p.V)
 function fenchel(p::PosPoly, w::AbstractVector)
   n = length(w)
   @assert length(p.V) == n
@@ -186,7 +149,7 @@ function fenchel(p::PosPoly, w::AbstractVector)
   return -lovaszext(p.f, -u, p.V)
 end
 
-# fenchel(p, u) = -lovaszext(p.f, p.V, -|u|)
+# fenchel(p, w) = -lovaszext(p.f, |w|, p.V)
 function fenchel(p::SymPoly, w::AbstractVector)
   n = length(w)
   @assert length(p.V) == n

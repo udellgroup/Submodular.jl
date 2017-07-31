@@ -1,8 +1,17 @@
 import Convex: Constraint
+import Convex: AbstractExpr
 
 ### Combinatorial sets
 
 abstract type CombiSet end
+
+### Combinatorial functions, the general type of combinatorial fucntions
+type CombiFunc <: AbstractExpr
+  head::Symbol
+  id_hash::UInt64
+  children::Tuple{AbstractExpr}
+  size::Tuple{Int, Int}
+end
 
 ### Combinatorial problems
 

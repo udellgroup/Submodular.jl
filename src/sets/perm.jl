@@ -3,11 +3,11 @@ export in, Perm, fenchel
 
 
 # the set of permutations of 1,...,n
-type Perm #<:CombiSet
+type Perm <: CombiSet
   dim::Int
 end
 
-# check if x is in the Permutation set
+# check if c is in the Permutation set
 function in(c::AbstractVector, p::Perm)
   n = p.dim
   @assert length(c) == n
