@@ -122,8 +122,8 @@ end
 
 # compute min w^x st x in p
 
-# fenchel(p, w) = -lovaszext(p.f, -w, p.V), w is nonpositve,
-#               = -Inf,                     w is not nonpositive
+# fenchel(p, w) = greedy(p.f, -w, p.V), w is nonpositve,
+#               = -Inf,                 w is not nonpositive
 function fenchel(p::SubPoly, w::AbstractVector)
   n = length(w)
   @assert length(p.V) == n
@@ -134,14 +134,14 @@ function fenchel(p::SubPoly, w::AbstractVector)
   end
 end
 
-# fenchel(p, w) = -lovaszext(p.f, -w, p.V)
+# fenchel(p, w) = greedy(p.f, -w, p.V)
 function fenchel(p::BasePoly, w::AbstractVector)
   n = length(w)
   @assert length(p.V) == n
   return greedy(p.f, -w, p.V)
 end
 
-# fenchel(p, w) = -lovaszext(p.f, -w_{+}, p.V)
+# fenchel(p, w) = -sign(w_{-}) * greedy(p.f, -w_{-}, p.V)
 function fenchel(p::PosPoly, w::AbstractVector)
   n = length(w)
   @assert length(p.V) == n
@@ -151,26 +151,11 @@ function fenchel(p::PosPoly, w::AbstractVector)
   return v
 end
 
-# fenchel(p, w) = -lovaszext(p.f, |w|, p.V)
+# fenchel(p, w) = -sign(w) .* greedy(p.f, |w|, p.V)
 function fenchel(p::SymPoly, w::AbstractVector)
   n = length(w)
   @assert length(p.V) == n
   v = greedy(p.f, abs.(w), p.V)
   v = -sign.(w) .* v
   return v
-end
-
-# Calculates the proximal operator of the indicator functino of the base polyhedron
-function prox(p::BasePoly, w::AbstractVector)
-  # step 1 initialization
-  n = length(w)
-  V = sort(p.V)     # the sorted base set
-  x = zeros(n)      # the candidate
-  for i = 1:n
-    x[i] = f(V[1:i]) - f(V[1:i-1])
-  end
-  S = x             # the set of extreme points that constitute the affine set
-  λ = [1]           # the coefficients of extreme points
-
-  # step 2 find the point p that minimize (x-w)^(p-w) st p in the base polyhedron
 end
