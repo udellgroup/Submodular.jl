@@ -43,31 +43,31 @@ facts("Sets") do
     @fact in(w3, p1) --> true
     @fact fenchel(p1, w1) --> -Inf
     @fact fenchel(p1, w2) --> -Inf
-    @fact fenchel(p1, w3) --> roughly(-7.0, TOL)
+    @fact fenchel(p1, w3) --> roughly([3, 1], TOL)
 
     p2 = BasePoly(twodim, [3, 1])
     @fact in(w1, p2) --> false
     @fact in(w2, p2) --> true
     @fact in(w3, p2) --> false
-    @fact fenchel(p2, w1) --> roughly(10.0, TOL)
-    @fact fenchel(p2, w2) --> roughly(8.0, TOL)
-    @fact fenchel(p2, w3) --> roughly(-7.0, TOL)
+    @fact fenchel(p2, w1) --> roughly([2, 2], TOL)
+    @fact fenchel(p2, w2) --> roughly([3, 1], TOL)
+    @fact fenchel(p2, w3) --> roughly([3, 1], TOL)
 
     p3 = PosPoly(twodim, [3, 1])
     @fact in(w1, p3) --> false
     @fact in(w2, p3) --> true
     @fact in(w3, p3) --> false
-    @fact fenchel(p3, w1) --> roughly(0.0, TOL)
-    @fact fenchel(p3, w2) --> roughly(0.0, TOL)
-    @fact fenchel(p3, w3) --> roughly(-7.0, TOL)
+    @fact fenchel(p3, w1) --> roughly([0, 0], TOL)
+    @fact fenchel(p3, w2) --> roughly([0, 0], TOL)
+    @fact fenchel(p3, w3) --> roughly([3, 1], TOL)
 
     p4 = SymPoly(twodim, [3, 1])
     @fact in(w1, p4) --> false
     @fact in(w2, p4) --> true
     @fact in(w3, p4) --> true
-    @fact fenchel(p4, w1) --> roughly(-11.0, TOL)
-    @fact fenchel(p4, w2) --> roughly(-8.0, TOL)
-    @fact fenchel(p4, w3) --> roughly(-7.0, TOL)
+    @fact fenchel(p4, w1) --> roughly([-3, -1], TOL)
+    @fact fenchel(p4, w2) --> roughly([-3, -1], TOL)
+    @fact fenchel(p4, w3) --> roughly([3, 1], TOL)
   end
 
 end

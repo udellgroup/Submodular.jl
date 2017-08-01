@@ -9,6 +9,7 @@ include("sets/poly.jl")
 
 # operators
 include("operators/lovasz_extension.jl")
+include("operators/greedy.jl")
 
 # algorithms
 # include("alg/frank_wolfe.jl")
