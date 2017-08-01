@@ -20,4 +20,4 @@ function in(w::AbstractVector, p::SubPoly)
     end
   end
   return checker
-en
+end
