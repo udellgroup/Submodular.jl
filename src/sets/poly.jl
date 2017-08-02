@@ -17,61 +17,61 @@ import Base.in
 export SubPoly, BasePoly, PosPoly, SymPoly
 export in, fenchel
 
-type SubPoly <: CombiSet
-  f::Function # the submodular function
+type SubPoly{T} <: CombiSet
+  f::T              # the submodular function
   V::AbstractVector # indexes of the base set
 
-  function SubPoly(f::Function, V::AbstractVector)
+  function SubPoly{T}(f::T, V::AbstractVector)
     @assert f([]) == 0
     new(f, V)
   end
 
-  function SubPoly(f::Function, n::Int)
+  function SubPoly{T}(f::T, n::Int)
     @assert f([]) == 0
     new(f, collect(1:n))
   end
 end
 
-type BasePoly <: CombiSet
-  f::Function
+type BasePoly{T} <: CombiSet
+  f::T
   V::AbstractVector
 
-  function BasePoly(f::Function, V::AbstractVector)
+  function BasePoly{T}(f::T, V::AbstractVector)
     @assert f([]) == 0
     new(f, V)
   end
 
-  function BasePoly(f::Function, n::Int)
+  function BasePoly{T}(f::T, n::Int)
     @assert f([]) == 0
     new(f, collect(1:n))
   end
 end
 
-type PosPoly <: CombiSet
-  f::Function
+type PosPoly{T} <: CombiSet
+  f::T
   V::Array{Int}
 
-  function PosPoly(f::Function, V::AbstractVector)
+  function PosPoly{T}(f::T, V::AbstractVector)
     @assert f([]) == 0
     new(f, V)
   end
 
-  function PosPoly(f::Function, n::Int)
+  function PosPoly{T}(f::T, n::Int)
     @assert f([]) == 0
     new(f, collect(1:n))
   end
 end
 
-type SymPoly <: CombiSet
-  f::Function
+type SymPoly{T} <: CombiSet
+  f::T
   V::AbstractVector
 
-  function SymPoly(f::Function, V::AbstractVector)
+  function SymPoly{T}(f::T, V::AbstractVector)
     @assert f([]) == 0
     new(f, V)
   end
 
-  function SymPoly(f::Function, n::Int)
+  function SymPoly{T}(f::T, n::Int)
     @assert f([]) == 0
     new(f, collect(1:n))
   end
