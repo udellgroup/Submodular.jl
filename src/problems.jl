@@ -1,23 +1,3 @@
-import MathProgBase
-import Convex: Constraint, AbstractExpr
-
-export CombiFunc, GenCombi, CombiSet, Problem, Solution
-export Float64OrNothing
-
-### Combinatorial functions
-abstract type CombiFunc <: AbstractExpr end
-
-# the type of generic combinatorial fucntions
-type GenCombi <: AbstractExpr
-  head::Symbol
-  id_hash::UInt64
-  children::Tuple{AbstractExpr}
-  size::Tuple{Int, Int}
-end
-
-### Combinatorial sets
-abstract type CombiSet end
-
 ### Combinatorial problems
 
 # a CombiProblem represents the combinatorial problem
