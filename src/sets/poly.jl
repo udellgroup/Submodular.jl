@@ -25,10 +25,10 @@ type SubPoly{T} <: AssPoly
   V::AbstractVector # indexes of the base set
 end
 
-# function SubPoly{T}(f::T, V::AbstractVector)
-#   @assert f([]) == 0
-#   return SubPoly(f, V)
-# end
+function SubPoly{T}(f::T, V::AbstractVector)
+  @assert f([]) == 0
+  return SubPoly(f, V)
+end
 
 function SubPoly{T}(f::T, n::Int)
   # @assert f([]) == 0
