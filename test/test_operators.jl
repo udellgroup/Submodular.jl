@@ -40,4 +40,14 @@ facts("Operators") do
     @fact lovaszext(modular, x, A) - dot(c[A], x)  --> roughly(0, TOL)
   end
 
+  context("Affine Projection") do
+    S = [3 2; 1 2]
+    w1 = [2, 2]
+    w2 = [3, 2]
+    w3 = [5, 0]
+    @fact affpro(w1, S) --> roughly([2, 2], TOL)
+    @fact affpro(w2, S) --> roughly([2.5, 1.5], TOL)
+    @fact affpro(w3, S) --> roughly([4.5, -0.5], TOL)
+  end
+
 end

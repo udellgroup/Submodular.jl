@@ -14,110 +14,83 @@
 #############################################################################
 
 import Base.in
+export AssPoly
 export SubPoly, BasePoly, PosPoly, SymPoly
 export in, fenchel
 
-type SubPoly{T} <: CombiSet
+abstract type AssPoly <: CombiSet end
+
+type SubPoly{T} <: AssPoly
   f::T              # the submodular function
   V::AbstractVector # indexes of the base set
-
-  function SubPoly{T}(f::T, V::AbstractVector)
-    @assert f([]) == 0
-    new(f, V)
-  end
-
-  function SubPoly{T}(f::T, n::Int)
-    @assert f([]) == 0
-    new(f, collect(1:n))
-  end
 end
 
-type BasePoly{T} <: CombiSet
+# function SubPoly{T}(f::T, V::AbstractVector)
+#   @assert f([]) == 0
+#   return SubPoly(f, V)
+# end
+
+function SubPoly{T}(f::T, n::Int)
+  # @assert f([]) == 0
+  return SubPoly(f, collect(1:n))
+end
+
+type BasePoly{T} <: AssPoly
   f::T
   V::AbstractVector
-
-  function BasePoly{T}(f::T, V::AbstractVector)
-    @assert f([]) == 0
-    new(f, V)
-  end
-
-  function BasePoly{T}(f::T, n::Int)
-    @assert f([]) == 0
-    new(f, collect(1:n))
-  end
 end
 
-type PosPoly{T} <: CombiSet
-  f::T
-  V::Array{Int}
+# function BasePoly{T}(f::T, V::AbstractVector)
+#   @assert f([]) == 0
+#   return BasePoly(f, V)
+# end
 
-  function PosPoly{T}(f::T, V::AbstractVector)
-    @assert f([]) == 0
-    new(f, V)
-  end
-
-  function PosPoly{T}(f::T, n::Int)
-    @assert f([]) == 0
-    new(f, collect(1:n))
-  end
+function BasePoly{T}(f::T, n::Int)
+  # @assert f([]) == 0
+  return BasePoly(f, collect(1:n))
 end
 
-type SymPoly{T} <: CombiSet
+type PosPoly{T} <: AssPoly
   f::T
   V::AbstractVector
+end
 
-  function SymPoly{T}(f::T, V::AbstractVector)
-    @assert f([]) == 0
-    new(f, V)
-  end
+# function PosPoly{T}(f::T, V::AbstractVector)
+#   @assert f([]) == 0
+#   return PosPoly(f, V)
+# end
 
-  function SymPoly{T}(f::T, n::Int)
-    @assert f([]) == 0
-    new(f, collect(1:n))
-  end
+function PosPoly{T}(f::T, n::Int)
+  # @assert f([]) == 0
+  return PosPoly(f, collect(1:n))
+end
+
+type SymPoly{T} <: AssPoly
+  f::T
+  V::AbstractVector
+end
+
+# function SymPoly{T}(f::T, V::AbstractVector)
+#   @assert f([]) == 0
+#   return SymPoly(f, V)
+# end
+
+function SymPoly{T}(f::T, n::Int)
+  # @assert f([]) == 0
+  return SymPoly(f, collect(1:n))
 end
 
 # check if w is in p
 
-function in(w::AbstractVector, p::SubPoly) # SLOW??
+function in(w::AbstractVector, p::AssPoly)
   n = length(w)
   @assert length(p.V) == n
-  checker = (p.f(p.V) >= sum(w))
-  if  n > 1 && checker == true
-    S = sort(p.V)
-    for i = 1:n
-      w1 = copy(w)
-      S1 = copy(S)
-      q = SubPoly(p.f, deleteat!(S1, i))
-      checker *= in(deleteat!(w1, i), q)
-    end
+  x = prox(p, w)
+  if sum(abs.(x - w)) < TOL
+    return true
+  else
+    return false
   end
-  return checker
-end
-
-function in(w::AbstractVector, p::BasePoly)
-  q = SubPoly(p.f, p.V)
-  checker = in(w, q)
-  if checker == true
-    checker = (sum(w) == p.f(p.V))
-  end
-  return checker
-end
-
-function in(w::AbstractVector, p::PosPoly)
-  q = SubPoly(p.f, p.V)
-  checker = in(w, q)
-  if checker == true
-    checker = all(x -> x>=0, w)
-  end
-  return checker
-end
-
-function in(u::AbstractVector, p::SymPoly)
-  w = abs.(u)
-  q = SubPoly(p.f, p.V)
-  checker = in(w, q)
-  return checker
 end
 
 # compute min w^x st x in p
