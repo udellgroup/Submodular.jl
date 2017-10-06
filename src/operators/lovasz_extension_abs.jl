@@ -5,9 +5,9 @@
 
 export lovasz
 export sign, monotonicity, curvature, evaluate
-export ConvexLovasz
+export ConvexLovaszAbs
 
-type LovaszExtAtom <: AbstractExpr
+type LovaszExtAbsAtom <: AbstractExpr
   head::Symbol
   id_hash::UInt64
   children::Tuple{AbstractExpr, Variable}
@@ -15,16 +15,21 @@ type LovaszExtAtom <: AbstractExpr
   variable::Variable
   func::CombiFunc
 
-  function LovaszExtAtom(f::CombiFunc, x::Variable)
+  function LovaszExtAbsAtom(f::CombiFunc, x::AbsAtom)
     if length(f.setvariables) == 1
       if evaluate(f, [])[1] != 0
         error("A combinatorial function should be 0 at the empty set to derive its Lovasz extension.")
       else
-        if x.size[1] == f.setvariables[1].cardinality
-          children = (f, x)
-          return new(:lovasz, hash(children), children, (1, 1), x, f)
+        var = get_v(x)
+        if length(var) != 1
+          error("Functions with other than one variable are not supported.")
         else
-          error("The size of the continuous variable should be the same as the baseset of the combinatorial variable of the combinatorial function.")
+          if var[1].size[1] == f.setvariables[1].cardinality
+            children = (f, var[1])
+            return new(:lovaszabs, hash(children), children, (1, 1), var[1], f)
+          else
+            error("The size of the continuous variable should be the same as the baseset of the combinatorial variable of the combinatorial function.")
+          end
         end
       end
     else
@@ -33,17 +38,17 @@ type LovaszExtAtom <: AbstractExpr
   end
 end
 
-lovasz(f::CombiFunc, x::Variable) = LovaszExtAtom(f, x)
+lovasz(f::CombiFunc, x::AbsAtom) = LovaszExtAbsAtom(f, x)
 
-function sign(x::LovaszExtAtom)
+function sign(x::LovaszExtAbsAtom)
   return sign(x.children[1])
 end
 
-function monotonicity(x::LovaszExtAtom)
+function monotonicity(x::LovaszExtAbsAtom)
   return monotonicity(x.children[1])
 end
 
-function curvature(x::LovaszExtAtom)
+function curvature(x::LovaszExtAbsAtom)
   modd = modularity(x.children[1])
   if modd == SubModularity()
     return ConvexVexity()
@@ -56,11 +61,11 @@ function curvature(x::LovaszExtAtom)
   end
 end
 
-vexity(x::LovaszExtAtom) = curvature(x)
+vexity(x::LovaszExtAbsAtom) = curvature(x)
 
-function evaluate(f::LovaszExtAtom)
+function evaluate(f::LovaszExtAbsAtom)
   n = f.children[2].size[1]
-  y = f.children[2].value[:, 1]
+  y = abs.(f.children[2].value[:])
   i = sortperm(y, rev = true)
   V = sort(f.children[1].setvariables[1].baseset)
   storage = zeros(n + 1)
@@ -75,22 +80,22 @@ function evaluate(f::LovaszExtAtom)
   return val
 end
 
-function get_cv(x::LovaszExtAtom)
+function get_cv(x::LovaszExtAbsAtom)
   variable = []
   return push!(variable, x.variable)
 end
 
-function get_sv(x::LovaszExtAtom)
+function get_sv(x::LovaszExtAbsAtom)
   return []
 end
 
-function get_v(x::LovaszExtAtom)
+function get_v(x::LovaszExtAbsAtom)
   variable = []
   return push!(variable, x.variable)
 end
 
 # Convex function + Lovasz extension
-type ConvexLovasz <: SCOPEModel
+type ConvexLovaszAbs <: SCOPEModel
   convex_part::Problem
-  lovasz::LovaszExtAtom
+  lovaszabs::LovaszExtAbsAtom
 end

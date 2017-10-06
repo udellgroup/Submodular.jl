@@ -11,12 +11,12 @@ facts("Sets") do
     @fact in(d1, p) --> true
     d2 = collect(2:5)
     @fact in(d2, p) --> false
-    c = [.4,.2,.6,.3]
-    @fact fenchel(p, c) --> roughly([2, 4, 1, 3], TOL)
+    w = [.4,.2,.6,.3]
+    @fact fenchel(p, w) --> roughly([2, 4, 1, 3], TOL)
   end
 
   context("Polyhedra") do
-    function twodim(A::AbstractVector)
+    function twodim(A::AbstractArray)
       if A == []
         return 0
       end
@@ -37,7 +37,7 @@ facts("Sets") do
     w2 = [2, 2]
     w3 = [-2, -1]
 
-    p1 = SubPoly(twodim, [3, 1])
+    p1 = SubmodPoly(twodim, [3, 1])
     @fact in(w1, p1) --> false
     @fact in(w2, p1) --> true
     @fact in(w3, p1) --> true

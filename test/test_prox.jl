@@ -7,7 +7,7 @@ facts("Prox") do
 
   context("Associated Polyhedra") do
     # the Lovasz extension of a submodular function defined on a set of two elements
-    function twodim(A::AbstractVector)
+    function twodim(A::AbstractArray)
       if A == []
         return 0
       end
@@ -33,7 +33,7 @@ facts("Prox") do
     w7 = [50, -3]
     w8 = [-5, 1]
 
-    p1 = SubPoly(twodim, [1, 3])
+    p1 = SubmodPoly(twodim, [1, 3])
     @fact prox(p1, w1) --> roughly([3, 1], TOL)
     @fact prox(p1, w2) --> roughly([2, 2], TOL)
     @fact prox(p1, w3) --> roughly([0, 0], TOL)

@@ -1,16 +1,14 @@
 #############################################################################
-# prox_poly.jl
-# Adapts the minimum-norm-point algorithm to compute the point in the submodular
-# polyhedron p that is to an arbitrary given point w.
-# For reference, look at "A Submodular Function Minimization Algorithm Based
-# on the Minimum-Norm Base" by Fujishige and Isotani.
+# minimum_norm_point.jl
+# Implements the the minimum_norm_point algorithm, to find the point with
+# minimum norm in the base polyhedron.
 #############################################################################
 
-export prox
+export minimum_norm_point
 
 TOL = 1e-3
 
-function prox(p::AssocPoly, w::AbstractArray)
+function minimum_norm_point(p::AssocPoly, w::AbstractArray)
   # step 1 initialization
   n = length(w)
   @assert length(p.V) == n
@@ -27,8 +25,8 @@ function prox(p::AssocPoly, w::AbstractArray)
   major_cycle(p, w, x, S)
 end
 
-# prox with warmstart
-function prox(p::AssocPoly, w, x₀::AbstractArray)
+# minimum-norm-point with warmstart
+function minimum_norm_point(p::AssocPoly, w::AbstractArray, x₀::AbstractArray)
   n = length(w)
   @assert length(p.V) == n
   S = zeros(n, 1)
@@ -36,11 +34,11 @@ function prox(p::AssocPoly, w, x₀::AbstractArray)
   major_cycle(p, w, x₀, S)
 end
 
-function major_cycle(p::AssocPoly, w, x::AbstractArray, S::AbstractMatrix)
+function major_cycle(p::AssocPoly, w::AbstractArray, x::AbstractArray, S::AbstractMatrix)
   n = length(w)
   S1 = minimum_check(p, w, x, S)
 	if S1 == S
-    return x
+    return x, S
   else
     S₀ = [S; ones(1, size(S, 2))]
     x₀ = copy(x)
@@ -92,7 +90,7 @@ end
 
 
 
-function major_cycle(p::SubmodPoly, w, x::AbstractArray, S::AbstractMatrix)
+function major_cycle(p::SubmodPoly, w::AbstractArray, x::AbstractArray, S::AbstractMatrix)
   n = length(w)
   a = x - w
   if any(a .> 0)
@@ -110,7 +108,7 @@ function major_cycle(p::SubmodPoly, w, x::AbstractArray, S::AbstractMatrix)
   else
     S1 = minimum_check(p, w, x, S)
 		if S1 == S
-	    return x
+	    return x, S
     else
 			S₀ = [S; ones(1, size(S, 2))]
 			x₀ = copy(x)
@@ -161,7 +159,7 @@ function major_cycle(p::SubmodPoly, w, x::AbstractArray, S::AbstractMatrix)
 	end
 end
 
-function minimum_check(p::AssocPoly, w, x::AbstractArray, S::AbstractMatrix)
+function minimum_check(p::AssocPoly, w::AbstractArray, x::AbstractArray, S::AbstractMatrix)
   a = x - w
   z = fenchel(p, a)
   minprod = dot(z - w, a)
@@ -171,4 +169,9 @@ function minimum_check(p::AssocPoly, w, x::AbstractArray, S::AbstractMatrix)
   else
     return [S z]
   end
+end
+
+function minimum_norm_point(f::CombiFunc, w::AbstractArray)
+  p = BasePoly(f)
+  return minimum_norm_point(p, w)
 end

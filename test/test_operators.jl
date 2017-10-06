@@ -7,7 +7,7 @@ facts("Operators") do
 
   context("Lovasz Extension") do
     # the Lovasz extension of a submodular function defined on a set of two elements
-    function twodim(A::AbstractVector)
+    function twodim(A::AbstractArray)
       if A == []
         return 0
       end
@@ -23,12 +23,12 @@ facts("Operators") do
     end
     w1 = [.5, 1]
     w2 = [1, .5]
-    @fact lovaszext(twodim, w1) - dot([2, 2], w1) --> roughly(0, TOL)
-    @fact lovaszext(twodim, w2) - dot([3, 1], w2) --> roughly(0, TOL)
+    @fact lovasz(twodim, w1) - dot([2, 2], w1) --> roughly(0, TOL)
+    @fact lovasz(twodim, w2) - dot([3, 1], w2) --> roughly(0, TOL)
 
     # the Lovasz extionsion of a modular function is a linear function
     c = rand(4)
-    function modular(V::AbstractVector)
+    function modular(V::AbstractArray)
       if length(V) == 0
         return 0
       else
@@ -37,7 +37,7 @@ facts("Operators") do
     end
     A = [1, 2, 4]
     x = rand(3)
-    @fact lovaszext(modular, x, A) - dot(c[A], x)  --> roughly(0, TOL)
+    @fact lovasz(modular, x, A) - dot(c[A], x)  --> roughly(0, TOL)
   end
 
   context("Affine Projection") do

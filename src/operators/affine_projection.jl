@@ -4,9 +4,9 @@
 # Note that points in S should be linearly independent
 #############################################################################
 
-export affpro
+export affproj
 
-function affpro(w::AbstractVector, S::AbstractMatrix)
+function affproj(w::AbstractArray, S::AbstractMatrix)
   T = S[:, 2: end] - S[:, 1] * ones(1, size(S, 2) - 1)
   x1 = S[:, 1]
   y = T*((T'*T)\T')*(w - x1) + x1

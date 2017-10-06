@@ -7,7 +7,7 @@ facts("Algorithms") do
 
   context("Minimum Norm") do
     # the Lovasz extension of a submodular function defined on a set of two elements
-    function twodim(A::AbstractVector)
+    function twodim(A::AbstractArray)
       if A == []
         return 0
       end
