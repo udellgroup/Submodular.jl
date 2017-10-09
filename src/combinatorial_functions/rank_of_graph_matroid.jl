@@ -15,7 +15,7 @@ type RankOfGraphicMatroidAtom <: CombiFunc
   graph::AbstractGraph
   setvariables::Array{CombiSet}
 
-  function ConnectedAtom(g::AbstractGraph, S::CombiSet)
+  function RankOfGraphicMatroidAtom(g::AbstractGraph, S::CombiSet)
     if nv(g) != S.cardinality
       error("Cannot define a modular function when the vector's size is different from the (card(baseset), 1).")
     else
@@ -37,10 +37,10 @@ function monotonicity(x::RankOfGraphicMatroidAtom)
 end
 
 function modularity(x::RankOfGraphicMatroidAtom)
-  return SubModularity()
+  return SubModularity()    # up to verification
 end
 
 function evaluate(x::RankOfGraphicMatroidAtom)
   sub_graph, vmap = induced_subgraph(x.children[1], get_elements(x.children[2]))
-  return x.children[2].cardinality - connected_components(sub_graph)
+  return x.children[2].cardinality - length(connected_components(sub_graph))
 end
