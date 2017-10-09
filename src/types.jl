@@ -39,7 +39,7 @@ abstract type CombiFunc <: AbstractExpr end
 ### Combinatorial sets
 abstract type CombiSet <: AbstractExpr end
 ### All combinatorial Sets
-const AllCombiSet = Union{AbstractArray,CombiSet}
+const AllCombiSet = Union{AbstractArray, CombiSet}
 
 ### Sets on continuous variables
 abstract type ContiSet <: AbstractExpr end

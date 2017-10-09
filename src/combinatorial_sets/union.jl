@@ -56,7 +56,7 @@ function union(set::AllCombiSet...)
     elements = collect(elements)
     newset = UnionAtom(elements, children = set, baseset = baseset, sign = Nondecreasing)
     return newset
-    end
+  end
 end
 
 function get_elements(x::UnionAtom)

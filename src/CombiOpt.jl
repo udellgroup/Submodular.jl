@@ -2,7 +2,7 @@ module CombiOpt
 
 import MathProgBase: ConicModel, loadproblem!, optimize!, numvar
 
-import LightGraphs: AbstractGraph, nv, induced_subgraph, connected_components
+import LightGraphs: AbstractGraph, nv, edges, src, dst, induced_subgraph, connected_components
 
 import Convex: AbstractExpr, Variable, Constraint, Constant, Solution, Problem, convert
 import Convex: Vexity, ConstVexity, AffineVexity, ConvexVexity, ConcaveVexity, NotDcp
@@ -41,6 +41,7 @@ include("continuous_sets/poly.jl")
 
 # combinatorial functions
 include("combinatorial_functions/card.jl")
+include("combinatorial_functions/cut.jl")
 include("combinatorial_functions/rank_of_graph_matroid.jl")
 include("combinatorial_functions/modular.jl")
 

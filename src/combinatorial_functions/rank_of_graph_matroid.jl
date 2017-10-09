@@ -42,5 +42,7 @@ end
 
 function evaluate(x::RankOfGraphicMatroidAtom)
   sub_graph, vmap = induced_subgraph(x.children[1], get_elements(x.children[2]))
-  return x.children[2].cardinality - length(connected_components(sub_graph))
+  val = zeros(1, 1)
+  val[1] = x.children[2].cardinality - length(connected_components(sub_graph))
+  return val
 end
