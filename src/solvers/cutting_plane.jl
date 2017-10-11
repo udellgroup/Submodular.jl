@@ -1,7 +1,7 @@
 #############################################################################
 # cutting_plane.jl
 # Use the cutting plane method to solve convex optimization of the form:
-# f(x) + g(x), where f(x) is the Lovasz extension of a submodular funciton.
+# minimize f(x) + g(x), where f(x) is the Lovasz extension of a submodular funciton.
 #############################################################################
 
 # using SCS

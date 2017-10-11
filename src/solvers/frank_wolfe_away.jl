@@ -1,3 +1,17 @@
+#############################################################################
+# frank_wolfe_away.jl
+# Use the frank wolfe algorithm with away steps to solve convex optimization of the form:
+#
+# minimize g(x) st x ∈ P(F),
+#
+# where g(x) is a smooth convex function
+# and P(F) is a polyhedron associated with a submodular function
+#
+# todo:
+# * improve data structure for ActiveVertices: would be faster to insert, delete, search with a heap
+# * check maximization and minimization both work
+#############################################################################
+
 import JuMP: DiffableFunction
 
 function frank_wolfe_away(p::CombiProblem{DiffableFunction},
@@ -42,8 +56,8 @@ function frank_wolfe_away(p::CombiProblem{DiffableFunction},
 		end
 
     # choose stepsize gamma via backtracking linesearch with parameters (.1, .5)
-		f(gamma) = objective(x + gamma*d)
-		df(gamma) = dot(grad_objective(x + gamma*d), d)
+		f(gamma) = evaluate(p.objective, x + gamma*d)
+		df(gamma) = dot(grad(p.objective, x + gamma*d), d)
 		gamma = gamma_max
 		while f(gamma) > f(0) + .1*df(0)*gamma
 			gamma *= .5
