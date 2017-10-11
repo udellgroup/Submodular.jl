@@ -14,6 +14,7 @@ in cutting plane solver:
 
 general code structure:
 
+* i cannot figure out what the right syntax is for forming a combinatorial problem from the code! how do i form any associated polyhedron for a submodular function? perhaps you forgot to check in that code? or perhaps i just need to see more examples...!
 * why call values "Vall" and not "Val" or "Value"?
 * how to you handle minimization vs maximization? i don't see any tooling for this in, eg, the frank wolfe solver
 
