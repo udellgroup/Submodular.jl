@@ -37,16 +37,22 @@ function monotonicity(x::CutAtom)
 end
 
 function modularity(x::CutAtom)
-  return SubModularity()    # up to verification
+  w = weights(x.children[1])
+  if all(x -> x>=0, w)
+    return SubModularity()
+  elseif all(x -> x <=0, w)
+    return SuperModularity()
+  end
 end
 
 function evaluate(x::CutAtom)
-  # weights = weights(x.children[1])
+  w = weights(x.children[1])
   cut = 0.0
   set = get_elements(x.children[2])
   for e in edges(x.children[1])
-    if in(src(e), set) + in(dst(e), set) == 1
-      cut += 1
+    u, v = src(e), dst(e)
+    if in(u, set) + in(v, set) == 1
+      cut += w[u, v]
     end
   end
   val = zeros(1, 1)

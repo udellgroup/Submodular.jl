@@ -2,7 +2,7 @@ module CombiOpt
 
 import MathProgBase: ConicModel, loadproblem!, optimize!, numvar
 
-import LightGraphs: AbstractGraph, nv, edges, src, dst, induced_subgraph, connected_components
+import LightGraphs: AbstractGraph, nv, edges, weights, src, dst, induced_subgraph, connected_components, modularity
 
 import Convex: AbstractExpr, Variable, Constraint, Constant, Solution, Problem, convert
 import Convex: Vexity, ConstVexity, AffineVexity, ConvexVexity, ConcaveVexity, NotDcp
