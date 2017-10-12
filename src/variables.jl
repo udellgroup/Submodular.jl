@@ -64,8 +64,8 @@ end
 
 ### Output the variables of an expression
 function get_cv(x::AbstractExpr)
-  if typeof(x) == Variable || (typeof(x) == Constant) || (typeof(x) == SetVariable)
-    if typeof(x) == Variable
+  if isa(x, Variable) || (typeof(x) == Constant) || (typeof(x) == SetVariable)
+    if isa(x, Variable)
       cv = []
       push!(cv, x)
       return cv
@@ -90,8 +90,8 @@ end
 
 ### Output the set variables of an expression
 function get_sv(x::AbstractExpr)
-  if typeof(x) == Variable || (typeof(x) == Constant) || (typeof(x) == SetVariable)
-    if typeof(x) == SetVariable
+  if isa(x) == Variable || (typeof(x) == Constant) || (typeof(x) == SetVariable)
+    if isa(x) == SetVariable
       sv = []
       push!(sv, x)
       return sv
@@ -120,8 +120,8 @@ end
 
 ### Output all the variables of an expression
 function get_v(x::AbstractExpr)
-  if typeof(x) == Variable || (typeof(x) == Constant) || (typeof(x) == SetVariable)
-    if typeof(x) == Variable || typeof(x) == SetVariable
+  if isa(x, Variable) || (typeof(x) == Constant) || (typeof(x) == SetVariable)
+    if isa(x, Variable) || typeof(x) == SetVariable
       v = []
       push!(v, x)
       return v

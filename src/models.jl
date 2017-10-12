@@ -87,9 +87,8 @@ function get_model(objective::AbstractExpr, constraints::AbstractArray=Constrain
       return ConvexProblem()
     end
   elseif length(constraints) == 1
-    if typeof(constraints[1]) <: SetConstraint
-      if typeof(constraints[1].rhs) <: AssocPoly && length(objective_sv) == 0 && length(objective_cv) == 1 && objective_cv[1].id_hash == constraints_cv[1].id_hash
-        # if typeof(vexity(objective)) <: AffineVexity
+    if isa(constraints[1], SetConstraint)
+      if isa(constraints[1].rhs, AssocPoly) && length(objective_sv) == 0 && length(objective_cv) == 1 && objective_cv[1].id_hash == constraints_cv[1].id_hash
         if vexity(objective) == AffineVexity()
           return LPoverAssocPoly()
         else

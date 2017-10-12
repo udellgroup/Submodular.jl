@@ -57,10 +57,10 @@ function setdiff(set1::CombiSet, set2::CombiSet)
 end
 
 function get_elements(x::SetDiffAtom)
-  if typeof(x.children[1]) <: Constant
+  if isa(x.children[1], Constant)
     set1 = Set(x.children[1].value)
     set2 = x.children[2].elements
-  elseif typeof(x.children[2]) <: Constant
+  elseif isa(x.children[2], Constant)
     set1 = x.children[1].elements
     set2 = Set(x.children[2].value)
   else
