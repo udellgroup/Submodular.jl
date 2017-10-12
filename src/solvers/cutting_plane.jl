@@ -111,7 +111,7 @@ function cutting_plane(p::Problem, f::LovaszExtAtom)
     gap = upper - lower
     if gap < TOL1
       var.value[:] = optsol
-      println("gapopt = $gap")
+      # println("gapopt = $gap")
       break
     # else
       # println("gapsub = $gap")
@@ -121,7 +121,7 @@ function cutting_plane(p::Problem, f::LovaszExtAtom)
       if length(permset) >= maxrep
         var.value[:] = optsol
         println("reached the maximum iteration at a single point")
-        println("gapsub = $gap")
+        # println("gapsub = $gap")
         break
       end
       if rep == checkpoint                         # check if the solver is stuck
@@ -296,7 +296,7 @@ function cutting_plane(p::Problem, f::LovaszExtAbsAtom)
     gap = upper - lower
     if gap < TOL1
       var.value[:] = optsol
-      println("gapopt = $gap")
+      # println("gapopt = $gap")
       break
     # else
       # println("gapsub = $gap")
@@ -306,7 +306,7 @@ function cutting_plane(p::Problem, f::LovaszExtAbsAtom)
       if length(permset) >= maxrep
         var.value[:] = optsol
         println("reached the maximum iteration at a single point")
-        println("gapsub = $gap")
+        # println("gapsub = $gap")
         break
       end
       if rep == checkpoint                         # check if the solver is stuck
