@@ -90,8 +90,8 @@ end
 
 ### Output the set variables of an expression
 function get_sv(x::AbstractExpr)
-  if isa(x) == Variable || (typeof(x) == Constant) || (typeof(x) == SetVariable)
-    if isa(x) == SetVariable
+  if isa(x, Variable) || (typeof(x) == Constant) || (typeof(x) == SetVariable)
+    if isa(x, SetVariable)
       sv = []
       push!(sv, x)
       return sv
