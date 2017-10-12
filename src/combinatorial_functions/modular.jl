@@ -27,7 +27,7 @@ end
 
 modular(x::Variable, S::CombiSet) = ModularAtom(x, S)
 
-modular(x::Vall, S::CombiSet) = ModularAtom(Constant(x), S)
+modular(x::Val, S::CombiSet) = ModularAtom(Constant(x), S)
 
 function sign(x::ModularAtom)
   return sign(x.children[1]) * sign(x.children[2])

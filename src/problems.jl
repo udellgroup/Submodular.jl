@@ -50,9 +50,9 @@ min(objective::AbstractExpr, constraints::Constraint...) =
   SCOPEPrimal(:minimize, objective, collect(constraints))
 min{T<:Constraint}(objective::AbstractExpr, constraints::Array{T}=Constraint[]) =
   SCOPEPrimal(:minimize, objective, constraints)
-min(objective::Vall, constraints::Constraint...) =
+min(objective::Val, constraints::Constraint...) =
   minimize(convert(AbstractExpr, objective), collect(constraints))
-min{T<:Constraint}(objective::Vall, constraints::Array{T}=Constraint[]) =
+min{T<:Constraint}(objective::Val, constraints::Array{T}=Constraint[]) =
   minimize(convert(AbstractExpr, objective), constraints)
 
 # Allow users to simply type maximize
@@ -60,9 +60,9 @@ max(objective::AbstractExpr, constraints::Constraint...) =
   SCOPEPrimal(:maximize, objective, collect(constraints))
 max{T<:Constraint}(objective::AbstractExpr, constraints::Array{T}=Constraint[]) =
   SCOPEPrimal(:maximize, objective, constraints)
-max(objective::Vall, constraints::Constraint...) =
+max(objective::Val, constraints::Constraint...) =
   maximize(convert(AbstractExpr, objective), collect(constraints))
-max{T<:Constraint}(objective::Vall, constraints::Array{T}=Constraint[]) =
+max{T<:Constraint}(objective::Val, constraints::Array{T}=Constraint[]) =
   maximize(convert(AbstractExpr, objective), constraints)
 
 # # Allow users to simply type satisfy (if there is no objective)
