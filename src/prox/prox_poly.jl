@@ -24,7 +24,8 @@ function prox(p::AssocPoly, w::AbstractArray)
   S = zeros(n, 1)       # the set of selected extreme points that constitute the affine set
   S[:, 1] = x
   # major cycle
-  major_cycle(p, w, x, S)
+  projected = major_cycle(p, w, x, S)
+  return projected[1]
 end
 
 # prox with warmstart
@@ -33,7 +34,8 @@ function prox(p::AssocPoly, w, x₀::AbstractArray)
   @assert length(p.V) == n
   S = zeros(n, 1)
   S[:, 1] = x₀
-  major_cycle(p, w, x₀, S)
+  projected = major_cycle(p, w, x₀, S)
+  return projected[1]
 end
 
 function major_cycle(p::AssocPoly, w, x::AbstractArray, S::AbstractMatrix)

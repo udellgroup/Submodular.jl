@@ -35,7 +35,7 @@ function evaluate(x::SetVariable)
   return x.value == nothing ? error("Value of the set variable is yet to be calculated") : x.value
 end
 
-function evaluate(x::SetVariable, w::Vall)
+function evaluate(x::SetVariable, w::Val)
   x.elements = w
 end
 
@@ -64,8 +64,8 @@ end
 
 ### Output the variables of an expression
 function get_cv(x::AbstractExpr)
-  if typeof(x) == Variable || (typeof(x) == Constant) || (typeof(x) == SetVariable)
-    if typeof(x) == Variable
+  if isa(x, Variable) || (typeof(x) == Constant) || (typeof(x) == SetVariable)
+    if isa(x, Variable)
       cv = []
       push!(cv, x)
       return cv
@@ -84,14 +84,14 @@ function get_cv(x::AbstractExpr)
   end
 end
 
-function get_cv(x::Vall)
+function get_cv(x::Val)
   return []
 end
 
 ### Output the set variables of an expression
 function get_sv(x::AbstractExpr)
-  if typeof(x) == Variable || (typeof(x) == Constant) || (typeof(x) == SetVariable)
-    if typeof(x) == SetVariable
+  if isa(x, Variable) || (typeof(x) == Constant) || (typeof(x) == SetVariable)
+    if isa(x, SetVariable)
       sv = []
       push!(sv, x)
       return sv
@@ -114,14 +114,14 @@ function get_sv(f::CombiFunc)
   return f.setvariables
 end
 
-function get_sv(x::Vall)
+function get_sv(x::Val)
   return []
 end
 
 ### Output all the variables of an expression
 function get_v(x::AbstractExpr)
-  if typeof(x) == Variable || (typeof(x) == Constant) || (typeof(x) == SetVariable)
-    if typeof(x) == Variable || typeof(x) == SetVariable
+  if isa(x, Variable) || (typeof(x) == Constant) || (typeof(x) == SetVariable)
+    if isa(x, Variable) || typeof(x) == SetVariable
       v = []
       push!(v, x)
       return v
@@ -144,6 +144,6 @@ function get_v(f::CombiFunc)
   return f.setvariables
 end
 
-function get_v(x::Vall)
+function get_v(x::Val)
   return []
 end

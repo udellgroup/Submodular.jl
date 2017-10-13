@@ -22,3 +22,8 @@ julia tricks:
 
 * to check types, use the function "isa": for example,
     `isa(var[1], Variable)` instead of `typeof(var[1]) == Variable`
+* make sure to add all packages used by this package to the `REQUIRE`
+
+syntax:
+
+* use `minimize(objective)` rather than `min(objective)` to form a problem (mimics Convex.jl syntax, and follows the math convention that distinguishes between minimize (which forms a problem), and min (which returns a value))

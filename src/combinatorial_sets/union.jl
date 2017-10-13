@@ -33,7 +33,7 @@ function union(set::AllCombiSet...)
     error("Cannot compute the union of one set.")
   else
     elements = []
-    if typeof(sets) <: Array{Number}
+    if isa(sets, Array{Number})
       for i = 1:n
         elements = vcat(elements, sets[i])
       end
@@ -42,7 +42,7 @@ function union(set::AllCombiSet...)
     else
       elements = Set([])
       for i = 1:n
-        if typeof(sets[i]) <: CombiSet
+        if isa(sets[i], CombiSet)
           baseset = union(baseset, Set(sets[i].baseset))
           elements = union(elements, Set(get_elements(sets[i])))
         else
@@ -63,7 +63,7 @@ function get_elements(x::UnionAtom)
   elements = []
   n = length(x.children)
   for i = 1:n
-    if typeof(x.children[i]) <: CombiSet
+    if isa(x.children[i], CombiSet)
       elements = union(elements, Set(get_elements(x.children[i])))
     else
       seti = Set(x.children[i])

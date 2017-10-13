@@ -33,7 +33,7 @@ function intersect(set::AllCombiSet...)
   if n < 2
     error("Cannot compute the union of one set.")
   else
-    if typeof(sets) <: Array{Number}
+    if isa(sets, Array{Number})
       elements = Sets[i]
       for i = 1:n
         elements = intersect(elements, Set(sets[i]))
@@ -41,13 +41,13 @@ function intersect(set::AllCombiSet...)
       elements = collect(Set(elements))
       return elements
     else
-      if typeof(sets[1]) <: CombiSet
+      if isa(sets[1], CombiSet)
         elements = Set(sets[1].elements)
       else
         elements = sets[1]
       end
       for i = 2:n
-        if typeof(sets[i]) <: CombiSet
+        if isa(sets[i], CombiSet)
           baseset = union(baseset, Set(sets[i].baseset))
           elements = intersect(elements, Set(get_elements(sets[i])))
         else
@@ -66,13 +66,13 @@ end
 
 function get_elements(x::IntersectAtom)
   n = length(x.children)
-  if typeof(x.children[1]) <: CombiSet
+  if isa(x.children[1], CombiSet)
     elements = Set(x.children[1].elements)
   else
     elements = x.children[1]
   end
   for i = 2:n
-    if typeof(x.children[i]) <: CombiSet
+    if isa(x.children[i], CombiSet)
       elements = intersect(elements, Set(get_elements(x.children[i])))
     else
       seti = Set(x.children[i])
