@@ -11,8 +11,7 @@
 # end
 #############################################################################
 
-import Base: min, max
-export SCOPEPrimal, min, max, satisfy, add_constraints!
+export SCOPEPrimal, SCOPEminimize, SCOPEmaximize, satisfy, add_constraints!
 
 const Float64OrNothing = Union{Float64,Void}
 
@@ -46,23 +45,23 @@ SCOPEPrimal(head::Symbol, objective::AbstractExpr, constraints::Constraint...) =
   SCOPEPrimal(head, objective, [constraints...])
 
 # Allow users to simply type minimize
-min(objective::AbstractExpr, constraints::Constraint...) =
+SCOPEminimize(objective::AbstractExpr, constraints::Constraint...) =
   SCOPEPrimal(:minimize, objective, collect(constraints))
-min{T<:Constraint}(objective::AbstractExpr, constraints::Array{T}=Constraint[]) =
+SCOPEminimize{T<:Constraint}(objective::AbstractExpr, constraints::Array{T}=Constraint[]) =
   SCOPEPrimal(:minimize, objective, constraints)
-min(objective::Val, constraints::Constraint...) =
+SCOPEminimize(objective::Val, constraints::Constraint...) =
   minimize(convert(AbstractExpr, objective), collect(constraints))
-min{T<:Constraint}(objective::Val, constraints::Array{T}=Constraint[]) =
+SCOPEminimize{T<:Constraint}(objective::Val, constraints::Array{T}=Constraint[]) =
   minimize(convert(AbstractExpr, objective), constraints)
 
 # Allow users to simply type maximize
-max(objective::AbstractExpr, constraints::Constraint...) =
+SCOPEmaximize(objective::AbstractExpr, constraints::Constraint...) =
   SCOPEPrimal(:maximize, objective, collect(constraints))
-max{T<:Constraint}(objective::AbstractExpr, constraints::Array{T}=Constraint[]) =
+SCOPEmaximize{T<:Constraint}(objective::AbstractExpr, constraints::Array{T}=Constraint[]) =
   SCOPEPrimal(:maximize, objective, constraints)
-max(objective::Val, constraints::Constraint...) =
+SCOPEmaximize(objective::Val, constraints::Constraint...) =
   maximize(convert(AbstractExpr, objective), collect(constraints))
-max{T<:Constraint}(objective::Val, constraints::Array{T}=Constraint[]) =
+SCOPEmaximize{T<:Constraint}(objective::Val, constraints::Array{T}=Constraint[]) =
   maximize(convert(AbstractExpr, objective), constraints)
 
 # # Allow users to simply type satisfy (if there is no objective)

@@ -12,7 +12,7 @@ import Convex: fix!, free!
 import Convex: min, add_constraints!
 import Convex: Sign, Positive, Negative, NoSign, ComplexSign
 import Convex: +, -, *, .*, /, ./, abs, AbsAtom
-import Convex: solve!
+import Convex: minimize, maximize, solve!
 import Convex: conic_problem
 
 export AbstractExpr, Variable, Solution, convert
