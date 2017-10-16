@@ -9,23 +9,11 @@
 #using Gurobi
 using Mosek
 
-export cutting_plane, cutting_plane1
+export cutting_plane
 
-TOL1 = 1e-3
+function cutting_plane(p::Problem, f::LovaszExtAtom, opt_tol, max_iters, max_rep, lev_tol_def, lev_tol_up, lev_tol_low, shrink_point, λ, μ)
 
-tight_tol = 1e-3
-
-soft_tol = 1e-2
-
-maxrep = 100
-
-checkpoint = 20
-
-maxiters = 200
-
-function cutting_plane(p::Problem, f::LovaszExtAtom)
-
-  lsTOL = 1e-3
+  lev_tol = lev_tol_def
 
   if length(get_v(p.objective + f)) != 1
     error("Cannot optimize functions with multiple variables.")
@@ -36,7 +24,7 @@ function cutting_plane(p::Problem, f::LovaszExtAtom)
   # solve!(q, GurobiSolver(OutputFlag=0, OptimalityTol = 1e-3))
   # solve!(q, SCSSolver(verbose=false))
   # solve!(q, ECOSSolver(verbose=false, abstol = 1e-6))
-  solve!(q, MosekSolver(MSK_IPAR_LOG = 0, MSK_DPAR_INTPNT_CO_TOL_REL_GAP = 1e-6))
+  solve!(q, MosekSolver(MSK_IPAR_LOG = 0, MSK_DPAR_INTPNT_CO_TOL_REL_GAP = 1e-3 * opt_tol))
 
   # Reset the primal variable for warmstart
   push!(q.solution.primal, q.solution.primal[end])
@@ -69,14 +57,14 @@ function cutting_plane(p::Problem, f::LovaszExtAtom)
 
   qq = Problem(q.head, q.objective, q.constraints)
 
-  for i = 1:maxiters
+  for i = 1:max_iters
 
     # println(length(permset))
 
     # solve!(q, GurobiSolver(OutputFlag=0, OptimalityTol = TOL^2), warmstart = true)
     # solve!(q, SCSSolver(verbose=false, suppress_warnings = true), warmstart = true)
     # solve!(q, ECOSSolver(verbose=false, abstol = 1e-6))
-    solve!(q, MosekSolver(MSK_IPAR_LOG = 0, MSK_DPAR_INTPNT_CO_TOL_REL_GAP = 1e-6))
+    solve!(q, MosekSolver(MSK_IPAR_LOG = 0, MSK_DPAR_INTPNT_CO_TOL_REL_GAP = 1e-3 * opt_tol))
 
     if isnan(q.optval)
       var.value[:] = optsol
@@ -109,7 +97,7 @@ function cutting_plane(p::Problem, f::LovaszExtAtom)
     end
     lower = max(cur_low, lower)
     gap = upper - lower
-    if gap < TOL1
+    if gap < opt_tol
       var.value[:] = optsol
       # println("gapopt = $gap")
       break
@@ -118,43 +106,41 @@ function cutting_plane(p::Problem, f::LovaszExtAtom)
     end
     if upper < cur_upper
       rep += 1
-      if length(permset) >= maxrep
+      if length(permset) >= max_rep
         var.value[:] = optsol
         println("reached the maximum iteration at a single point")
         # println("gapsub = $gap")
         break
       end
-      if rep == checkpoint                         # check if the solver is stuck
-        while pernum > maxrep
-          # println("reduce permnum!")
-          lsTOL *= 0.1
-          (c, pernum, perm) = greedy_rand(f.func, optsol, lsTOL)
+      if rep == shrink_point                         # check if the solver is stuck
+        while pernum > max_rep && level_tol >= lev_tol_low  # println("reduce permnum!")
+          lev_tol *= μ
+          (c, pernum, perm) = greedy_rand(f.func, optsol, lev_tol)
         end
       end
       b = greedy(f.func, var.value[:])
       while in(b, subgradients)
         # println("b included!")
-        (b, pernum1, perm) = greedy_rand(f.func, var.value[:], lsTOL)
+        (b, pernum1, perm) = greedy_rand(f.func, var.value[:], lev_tol)
       end
       var.value[:] = optsol
-      while length(permset) >= pernum
-        # println("enlarge permnum!")
-        lsTOL *= 1.1
-        (a, pernum, perm) = greedy_rand(f.func, optsol, lsTOL)
+      while length(permset) >= pernum && level_tol <= lev_tol_up  # println("enlarge permnum!")
+        lev_tol *= λ
+        (a, pernum, perm) = greedy_rand(f.func, optsol, lev_tol)
       end
-      (a, pernum, perm) = greedy_rand(f.func, optsol, lsTOL)
+      (a, pernum, perm) = greedy_rand(f.func, optsol, lev_tol)
       while in(a, subgradients)
         # println("a included!")
         if !in(perm, permset)
           push!(permset, perm)
         end
-        (a, pernum) = greedy_rand(f.func, optsol, lsTOL)
+        (a, pernum) = greedy_rand(f.func, optsol, lev_tol)
       end
       push!(permset, perm)
     else                                           # update the upper bound
       rep = 1                                      # reset repetition count
-      lsTOL = 1e-3                                 # reset the level set tolerance
-      (a, pernum, perm) = greedy_rand(f.func, optsol, lsTOL)
+      lev_tol = lev_tol_def                        # reset the level set tolerance
+      (a, pernum, perm) = greedy_rand(f.func, optsol, lev_tol)
       a = greedy(f.func, optsol)
       permset = [sortperm(var.value[:], rev = true)]
     end
@@ -208,9 +194,9 @@ function cutting_plane(p::Problem, f::LovaszExtAtom)
   return optsol
 end
 
-function cutting_plane(p::Problem, f::LovaszExtAbsAtom)
+function cutting_plane(p::Problem, f::LovaszExtAbsAtom, opt_tol, max_iters, max_rep, lev_tol_def, lev_tol_up, lev_tol_low, shrink_point, λ, μ)
 
-  lsTOL = 1e-3
+  lev_tol = lev_tol_def
 
   if length(get_v(p.objective + f)) != 1
     error("Cannot optimize functions with multiple variables.")
@@ -221,7 +207,7 @@ function cutting_plane(p::Problem, f::LovaszExtAbsAtom)
   # solve!(q, GurobiSolver(OutputFlag=0, OptimalityTol = 1e-3))
   # solve!(q, SCSSolver(verbose=false))
   # solve!(q, ECOSSolver(verbose=false, abstol = 1e-6))
-  solve!(q, MosekSolver(MSK_IPAR_LOG = 0, MSK_DPAR_INTPNT_CO_TOL_REL_GAP = 1e-6))
+  solve!(q, MosekSolver(MSK_IPAR_LOG = 0, MSK_DPAR_INTPNT_CO_TOL_REL_GAP = 1e-3 * opt_tol))
 
   # Reset the primal variable for warmstart
   push!(q.solution.primal, q.solution.primal[end])
@@ -254,14 +240,14 @@ function cutting_plane(p::Problem, f::LovaszExtAbsAtom)
 
   qq = Problem(q.head, q.objective, q.constraints)
 
-  for i = 1:maxiters
+  for i = 1:max_iters
 
     # println(length(permset))
 
     # solve!(q, GurobiSolver(OutputFlag=0, OptimalityTol = TOL^2), warmstart = true)
     # solve!(q, SCSSolver(verbose=false, suppress_warnings = true), warmstart = true)
     # solve!(q, ECOSSolver(verbose=false, abstol = 1e-6))
-    solve!(q, MosekSolver(MSK_IPAR_LOG = 0, MSK_DPAR_INTPNT_CO_TOL_REL_GAP = 1e-6))
+    solve!(q, MosekSolver(MSK_IPAR_LOG = 0, MSK_DPAR_INTPNT_CO_TOL_REL_GAP = 1e-3 * opt_tol))
 
     if isnan(q.optval)
       var.value[:] = optsol
@@ -294,7 +280,7 @@ function cutting_plane(p::Problem, f::LovaszExtAbsAtom)
     end
     lower = max(cur_low, lower)
     gap = upper - lower
-    if gap < TOL1
+    if gap < opt_tol
       var.value[:] = optsol
       # println("gapopt = $gap")
       break
@@ -303,43 +289,40 @@ function cutting_plane(p::Problem, f::LovaszExtAbsAtom)
     end
     if upper < cur_upper
       rep += 1
-      if length(permset) >= maxrep
+      if length(permset) >= max_rep
         var.value[:] = optsol
-        println("reached the maximum iteration at a single point")
-        # println("gapsub = $gap")
+        println("reached the maximum iteration at a single point")  # println("gapsub = $gap")
         break
       end
-      if rep == checkpoint                         # check if the solver is stuck
-        while pernum > maxrep
-          # println("reduce permnum!")
-          lsTOL *= 0.1
-          (c, pernum, perm) = greedy_rand(f.func, abs.(optsol), lsTOL)
+      if rep == shrink_point                         # check if the solver is stuck
+        while pernum > max_rep && level_tol >= lev_tol_low  # println("reduce permnum!")
+          lev_tol *= μ
+          (c, pernum, perm) = greedy_rand(f.func, abs.(optsol), lev_tol)
         end
       end
       b = greedy(f.func, abs.(var.value[:]))
       while in(b, subgradients)
         # println("b included!")
-        (b, pernum1, perm) = greedy_rand(f.func, abs.(var.value[:]), lsTOL)
+        (b, pernum1, perm) = greedy_rand(f.func, abs.(var.value[:]), lev_tol)
       end
       var.value[:] = optsol
-      while length(permset) >= pernum
-        # println("enlarge permnum!")
-        lsTOL *= 1.1
-        (a, pernum, perm) = greedy_rand(f.func, abs.(optsol), lsTOL)
+      while length(permset) >= pernum && level_tol <= lev_tol_up  # println("enlarge permnum!")
+        lev_tol *= λ
+        (a, pernum, perm) = greedy_rand(f.func, abs.(optsol), lev_tol)
       end
-      (a, pernum, perm) = greedy_rand(f.func, abs.(optsol), lsTOL)
+      (a, pernum, perm) = greedy_rand(f.func, abs.(optsol), lev_tol)
       while in(a, subgradients)
         # println("a included!")
         if !in(perm, permset)
           push!(permset, perm)
         end
-        (a, pernum) = greedy_rand(f.func, abs.(optsol), lsTOL)
+        (a, pernum) = greedy_rand(f.func, abs.(optsol), lev_tol)
       end
       push!(permset, perm)
     else                                           # update the upper bound
       rep = 1                                      # reset repetition count
-      lsTOL = 1e-3                                 # reset the level set tolerance
-      (a, pernum, perm) = greedy_rand(f.func, abs.(optsol), lsTOL)
+      lev_tol = lev_tol_def                        # reset the level set tolerance
+      (a, pernum, perm) = greedy_rand(f.func, abs.(optsol), lev_tol)
       a = greedy(f.func, abs.(optsol))
       permset = [sortperm(var.value[:], rev = true)]
     end
