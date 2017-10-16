@@ -70,11 +70,5 @@ include("solvers/proximal_level_bundle.jl")
 
 # utilities
 include("utilities/show.jl")
-include("utilities/compatibilities.jl")
-
-
-# import Graphs: GenericGraph, simple_graph, add_edge!, connected_components
-#
-# export simple_graph, add_edge!, connected_components
 
 end # module
