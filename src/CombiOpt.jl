@@ -1,6 +1,6 @@
 module CombiOpt
 
-import MathProgBase: ConicModel, loadproblem!, optimize!, numvar
+import MathProgBase: ConicModel, loadproblem!, optimize!, numvar, AbstractMathProgSolver
 
 import LightGraphs: AbstractGraph, nv, edges, weights, src, dst, induced_subgraph, connected_components, modularity
 

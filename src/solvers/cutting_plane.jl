@@ -11,7 +11,7 @@ using Mosek
 
 export cutting_plane
 
-function cutting_plane(p::Problem, f::LovaszExtAtom, opt_tol, max_iters, max_rep, lev_tol_def, lev_tol_up, lev_tol_low, shrink_point, λ, μ)
+function cutting_plane(p::Problem, f::LovaszExtAtom, abs_tol, max_iters, max_rep, lev_tol_def, lev_tol_up, lev_tol_low, shrink_point, λ, μ)
 
   lev_tol = lev_tol_def
 
@@ -24,7 +24,7 @@ function cutting_plane(p::Problem, f::LovaszExtAtom, opt_tol, max_iters, max_rep
   # solve!(q, GurobiSolver(OutputFlag=0, OptimalityTol = 1e-3))
   # solve!(q, SCSSolver(verbose=false))
   # solve!(q, ECOSSolver(verbose=false, abstol = 1e-6))
-  solve!(q, MosekSolver(MSK_IPAR_LOG = 0, MSK_DPAR_INTPNT_CO_TOL_REL_GAP = 1e-3 * opt_tol))
+  solve!(q, MosekSolver(MSK_IPAR_LOG = 0, MSK_DPAR_INTPNT_CO_TOL_REL_GAP = 1e-3 * abs_tol))
 
   # Reset the primal variable for warmstart
   push!(q.solution.primal, q.solution.primal[end])
@@ -64,7 +64,7 @@ function cutting_plane(p::Problem, f::LovaszExtAtom, opt_tol, max_iters, max_rep
     # solve!(q, GurobiSolver(OutputFlag=0, OptimalityTol = TOL^2), warmstart = true)
     # solve!(q, SCSSolver(verbose=false, suppress_warnings = true), warmstart = true)
     # solve!(q, ECOSSolver(verbose=false, abstol = 1e-6))
-    solve!(q, MosekSolver(MSK_IPAR_LOG = 0, MSK_DPAR_INTPNT_CO_TOL_REL_GAP = 1e-3 * opt_tol))
+    solve!(q, MosekSolver(MSK_IPAR_LOG = 0, MSK_DPAR_INTPNT_CO_TOL_REL_GAP = 1e-3 * abs_tol))
 
     if isnan(q.optval)
       var.value[:] = optsol
@@ -97,7 +97,7 @@ function cutting_plane(p::Problem, f::LovaszExtAtom, opt_tol, max_iters, max_rep
     end
     lower = max(cur_low, lower)
     gap = upper - lower
-    if gap < opt_tol
+    if gap < abs_tol
       var.value[:] = optsol
       # println("gapopt = $gap")
       break
@@ -151,7 +151,7 @@ function cutting_plane(p::Problem, f::LovaszExtAtom, opt_tol, max_iters, max_rep
       for i = 1:cos_num
         prod[i] = dot(optsol, subgradients[i])
       end
-      if cos_num == (n + 2)
+      if cos_num == (2 * n + 3)
         minn = indmin(prod)
         minn = indmin(prod)
         q.constraints[conslength + minn] = q.constraints[end]
@@ -194,7 +194,7 @@ function cutting_plane(p::Problem, f::LovaszExtAtom, opt_tol, max_iters, max_rep
   return optsol
 end
 
-function cutting_plane(p::Problem, f::LovaszExtAbsAtom, opt_tol, max_iters, max_rep, lev_tol_def, lev_tol_up, lev_tol_low, shrink_point, λ, μ)
+function cutting_plane(p::Problem, f::LovaszExtAbsAtom, abs_tol, max_iters, max_rep, lev_tol_def, lev_tol_up, lev_tol_low, shrink_point, λ, μ)
 
   lev_tol = lev_tol_def
 
@@ -207,7 +207,7 @@ function cutting_plane(p::Problem, f::LovaszExtAbsAtom, opt_tol, max_iters, max_
   # solve!(q, GurobiSolver(OutputFlag=0, OptimalityTol = 1e-3))
   # solve!(q, SCSSolver(verbose=false))
   # solve!(q, ECOSSolver(verbose=false, abstol = 1e-6))
-  solve!(q, MosekSolver(MSK_IPAR_LOG = 0, MSK_DPAR_INTPNT_CO_TOL_REL_GAP = 1e-3 * opt_tol))
+  solve!(q, MosekSolver(MSK_IPAR_LOG = 0, MSK_DPAR_INTPNT_CO_TOL_REL_GAP = 1e-3 * abs_tol))
 
   # Reset the primal variable for warmstart
   push!(q.solution.primal, q.solution.primal[end])
@@ -247,7 +247,7 @@ function cutting_plane(p::Problem, f::LovaszExtAbsAtom, opt_tol, max_iters, max_
     # solve!(q, GurobiSolver(OutputFlag=0, OptimalityTol = TOL^2), warmstart = true)
     # solve!(q, SCSSolver(verbose=false, suppress_warnings = true), warmstart = true)
     # solve!(q, ECOSSolver(verbose=false, abstol = 1e-6))
-    solve!(q, MosekSolver(MSK_IPAR_LOG = 0, MSK_DPAR_INTPNT_CO_TOL_REL_GAP = 1e-3 * opt_tol))
+    solve!(q, MosekSolver(MSK_IPAR_LOG = 0, MSK_DPAR_INTPNT_CO_TOL_REL_GAP = 1e-3 * abs_tol))
 
     if isnan(q.optval)
       var.value[:] = optsol
@@ -280,7 +280,7 @@ function cutting_plane(p::Problem, f::LovaszExtAbsAtom, opt_tol, max_iters, max_
     end
     lower = max(cur_low, lower)
     gap = upper - lower
-    if gap < opt_tol
+    if gap < abs_tol
       var.value[:] = optsol
       # println("gapopt = $gap")
       break
@@ -333,7 +333,7 @@ function cutting_plane(p::Problem, f::LovaszExtAbsAtom, opt_tol, max_iters, max_
       for i = 1:cos_num
         prod[i] = dot(optsol, subgradients[i])
       end
-      if cos_num == (n + 2)
+      if cos_num == (2 * n + 3)
         minn = indmin(prod)
         minn = indmin(prod)
         q.constraints[conslength + minn] = q.constraints[end]
