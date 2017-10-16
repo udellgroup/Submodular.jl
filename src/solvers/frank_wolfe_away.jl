@@ -13,6 +13,7 @@
 #############################################################################
 
 import JuMP: DiffableFunction
+export frank_wolfe_away
 
 function frank_wolfe_away(p::CombiProblem{DiffableFunction},
   maxiters=100,
