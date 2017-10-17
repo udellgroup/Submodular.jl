@@ -1,4 +1,4 @@
-in general the code structure is beautiful: very well organized and extremely clear
+draft of paper is [on sharelatex](https://www.sharelatex.com/project/59b977871683de3739c3403a)
 
 in frank wolfe solver:
 
