@@ -6,7 +6,7 @@ export Solution
 export solve!, solve1!
 
 function solve!(p::SCOPEPrimal;
-                s::MathProgBase.AbstractMathProgSolver = MosekSolver()
+                s::AbstractMathProgSolver = MosekSolver(),
                 abs_tol::Float64 = 1e-3,
                 max_iters::Int = 200,
                 max_rep::Int = 100,

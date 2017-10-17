@@ -4,6 +4,7 @@
 #############################################################################
 
 export card, compose
+export in
 export sign, monotonicity, modularity, evaluate
 
 type CardBasedAtom <: CombiFunc
@@ -33,7 +34,7 @@ function sign(x::CardBasedAtom)
 end
 
 function monotonicity(x::CardBasedAtom)
-  return monotonicity(x.children[1])
+  return (monotonicity(x.children[1]), )
 end
 
 function modularity(x::CardBasedAtom)

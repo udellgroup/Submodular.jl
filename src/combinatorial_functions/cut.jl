@@ -33,7 +33,7 @@ function sign(x::CutAtom)
 end
 
 function monotonicity(x::CutAtom)
-  return NoSign()
+  return (NoMonotonicity(), )
 end
 
 function modularity(x::CutAtom)
@@ -55,7 +55,5 @@ function evaluate(x::CutAtom)
       cut += w[u, v]
     end
   end
-  val = zeros(1, 1)
-  val[1] = cut
-  return val
+  return cut
 end

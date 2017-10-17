@@ -1,12 +1,8 @@
 module CombiOpt
 
-import MathProgBase: ConicModel, loadproblem!, optimize!, numvar, AbstractMathProgSolver
-
-import LightGraphs: AbstractGraph, nv, edges, weights, src, dst, induced_subgraph, connected_components, modularity
-
 import Convex: AbstractExpr, Variable, Constraint, Constant, Solution, Problem, convert
 import Convex: Vexity, ConstVexity, AffineVexity, ConvexVexity, ConcaveVexity, NotDcp
-import Convex: Sign, ComplexSign, Monotonicity, Nonincreasing, Nondecreasing, NoMonotonicity
+import Convex: Sign, ComplexSign, Monotonicity, Nonincreasing, Nondecreasing, ConstMonotonicity, NoMonotonicity
 import Convex: curvature, evaluate, monotonicity, sign, vexity
 import Convex: fix!, free!
 import Convex: min, add_constraints!
@@ -14,6 +10,12 @@ import Convex: Sign, Positive, Negative, NoSign, ComplexSign
 import Convex: +, -, *, .*, /, ./, abs, AbsAtom
 import Convex: minimize, maximize, solve!
 import Convex: conic_problem
+
+import ForwardDiff: gradient
+
+import LightGraphs: AbstractGraph, nv, edges, weights, src, dst, induced_subgraph, connected_components, modularity
+
+import MathProgBase: ConicModel, loadproblem!, optimize!, numvar, AbstractMathProgSolver
 
 export AbstractExpr, Variable, Solution, convert
 export curvature, evaluate, monotonicity, sign, vexity
@@ -52,6 +54,7 @@ include("models.jl")
 include("operators/affine_projection.jl")
 include("operators/lovasz_extension_abs.jl")
 include("operators/lovasz_extension.jl")
+include("operators/gradient.jl")
 include("operators/greedy.jl")
 include("operators/solve_dual.jl")
 
