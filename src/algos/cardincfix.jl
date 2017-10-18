@@ -64,24 +64,39 @@ end
 
 ################################
 #example: 
-N=100;
+
+N=20;
+println("Example on a ground set of $N elements:")
+
 g = rand(N);
 g = sort(g, rev=true);
 g = (g + 0.1)/1.01;
 for i = 2: N
 	g[i] = g[i] + g[i-1];
 end
-
 # g is a concave non-decreasing function
-
+println("Cardinality-based submodular function F(S) = g(|S|), where g is given by:")
+println("g = ",g);
 y = rand(N); # point to project on the base polytope of F(S) = g(|S|)
+println();
+println("The random point y that we are projecting on the base polytope B(F) is:")
+println("y = ", y);
 
 euclidean_proj = cardincfix(g, y, "euclidean");
+println()
+println("The computed Euclidean projection is: ");
+println("projection = ", euclidean_proj);
 
 #sanity checks: 
-sortperm(y) == sortperm(euclidean_proj[1:N])
-sum(euclidean_proj)>=g[N]-0.0001 ## sometimes there is an error of 10^-10 in these two numbers. 
-sum(euclidean_proj)<=g[N]+0.0001
+println()
+println("Performing sanity checks: ")
+println("Is the sorted order of indices in y and the projection the same?") 
+#this is a known property of projections under uniform divergences over cardinality-based polytopes
+println(sortperm(y) == sortperm(euclidean_proj[1:N]))
+
+println("Is the constraint x(E) = F(E) = g(n) satisfied upto an error of 10^-10?")
+sum(euclidean_proj)>=g[N]-(10.0)^(-10) 
+sum(euclidean_proj)<=g[N]+(10.0)^(-10)
 
 ##############################
 
