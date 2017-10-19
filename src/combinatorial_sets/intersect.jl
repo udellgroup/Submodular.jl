@@ -14,19 +14,15 @@ type IntersectAtom <: CombiSet
   elements::ValOrNothing
   baseset::AbstractArray
   cardinality::Int
-  value::ValOrNothing
-  sign::Sign
 
-  function IntersectAtom(elements::AbstractArray; baseset = elements::AbstractArray,
-  children = (elements, )::Tuple, sign = NoSign()::Sign)
-    this = new(:intersect, 0, children, elements, baseset, length(baseset), nothing, NoSign())
+  function IntersectAtom(elements::ValOrNothing, children::Tuple, baseset::AbstractArray)
+    this = new(:intersect, 0, children, elements, baseset, length(baseset))
     this.id_hash = object_id(this)
     return this
   end
 end
 
 function intersect(set::AllCombiSet...)
-  sets = collect(set)
   baseset = Set([])
   sets = collect(set)
   n = length(sets)
@@ -41,26 +37,18 @@ function intersect(set::AllCombiSet...)
       elements = collect(Set(elements))
       return elements
     else
-      if isa(sets[1], CombiSet)
-        elements = Set(sets[1].elements)
-      else
-        elements = sets[1]
-      end
       for i = 2:n
         if isa(sets[i], CombiSet)
           baseset = union(baseset, Set(sets[i].baseset))
-          elements = intersect(elements, Set(get_elements(sets[i])))
         else
           seti = Set(sets[i])
           baseset = union(baseset, seti)
-          elements = intersect(elements, seti)
         end
       end
+      baseset = collect(baseset)
+      newset = IntersectAtom(nothing, set, baseset)
+      return newset
     end
-    baseset = collect(baseset)
-    elements = collect(elements)
-    newset = IntersectAtom(elements, children = set, baseset = baseset, sign = Nondecreasing)
-    return newset
   end
 end
 

@@ -4,7 +4,7 @@
 #############################################################################
 
 export SetVariable
-export sign, evaluate, baseset, fix!, free!, elements
+export fix!, free!, elements
 export get_cv, get_sv, get_v
 
 type SetVariable <: CombiSet
@@ -13,35 +13,16 @@ type SetVariable <: CombiSet
   elements::ValOrNothing
   baseset::AbstractArray
   cardinality::Int
-  value::ValOrNothing
-  sign::Sign
-  sets::Array{Symbol,1}
 
-  function SetVariable(baseset::AbstractArray, sign::Sign=NoSign(), sets::Symbol...)
-    this = new(:setvariable, 0, nothing, baseset, length(baseset), nothing, sign, Symbol[sets...])
+  function SetVariable(baseset::AbstractArray)
+    this = new(:setvariable, 0, nothing, baseset, length(baseset))
     this.id_hash = object_id(this)
     return this
   end
-  SetVariable(m::Int, sign::Sign=NoSign(), sets::Symbol...) = SetVariable(collect(1:m), sign, sets...)
-  SetVariable(sign::Sign, sets::Symbol...) = SetVariable([], sign, sets...)
-  SetVariable(sets::Symbol...) = SetVariable([], NoSign(), sets...)
-  SetVariable(baseset::AbstractArray, sets::Symbol...) = SetVariable(baseset, NoSign(), sets...)
-  SetVariable(m::Int, sets::Symbol...) = SetVariable(collect(1:m), sets...)
+  SetVariable(m::Int) = SetVariable(collect(1:m))
 end
 
 id_to_variables = Dict{UInt64, SetVariable}()
-
-function evaluate(x::SetVariable)
-  return x.value == nothing ? error("Value of the set variable is yet to be calculated") : x.value
-end
-
-function evaluate(x::SetVariable, w::Val)
-  x.elements = w
-end
-
-function sign(x::SetVariable)
-  return x.sign
-end
 
 # fix set variables to hold them at their current value, and free them afterwards
 function fix!(x::SetVariable)

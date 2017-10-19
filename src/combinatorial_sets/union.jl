@@ -14,12 +14,9 @@ type UnionAtom <: CombiSet
   elements::ValOrNothing
   baseset::AbstractArray
   cardinality::Int
-  value::ValOrNothing
-  sign::Sign
 
-  function UnionAtom(elements::AbstractArray; baseset = elements::AbstractArray,
-  children = (elements, )::Tuple, sign = NoSign()::Sign)
-    this = new(:union, 0, children, elements, baseset, length(baseset), nothing, NoSign())
+  function UnionAtom(elements::ValOrNothing, children::Tuple, baseset::AbstractArray)
+    this = new(:union, 0, children, elements, baseset, length(baseset))
     this.id_hash = object_id(this)
     return this
   end
@@ -27,35 +24,31 @@ end
 
 function union(set::AllCombiSet...)
   sets = collect(set)
-  n = length(sets)
   baseset = Set([])
+  n = length(sets)
   if n < 2
     error("Cannot compute the union of one set.")
   else
-    elements = []
     if isa(sets, Array{Number})
+      elements = []
       for i = 1:n
         elements = vcat(elements, sets[i])
       end
       elements = collect(Set(elements))
       return elements
     else
-      elements = Set([])
       for i = 1:n
         if isa(sets[i], CombiSet)
           baseset = union(baseset, Set(sets[i].baseset))
-          elements = union(elements, Set(get_elements(sets[i])))
         else
           seti = Set(sets[i])
           baseset = union(baseset, seti)
-          elements = union(elements, seti)
         end
       end
+      baseset = collect(baseset)
+      newset = UnionAtom(nothing, set, baseset)
+      return newset
     end
-    baseset = collect(baseset)
-    elements = collect(elements)
-    newset = UnionAtom(elements, children = set, baseset = baseset, sign = Nondecreasing)
-    return newset
   end
 end
 

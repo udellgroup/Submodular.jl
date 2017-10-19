@@ -27,3 +27,4 @@ julia tricks:
 syntax:
 
 * ~~use `minimize(objective)` rather than `min(objective)` to form a problem (mimics Convex.jl syntax, and follows the math convention that distinguishes between minimize (which forms a problem), and min (which returns a value))~~
+* change notations, F() for submodular functions and f() for lovasz extensions.

@@ -3,7 +3,7 @@
 # Handles generic combinatorial sets and their operations.
 #############################################################################
 
-export GenCombiSet, get_elements, sign, evaluate
+export GenCombiSet, get_elements
 
 # Instance of generic Combinatorial Sets
 abstract type GenCombiSet <: CombiSet end
@@ -14,13 +14,4 @@ function get_elements(x::CombiSet)
   else
     return x.elements
   end
-end
-
-function sign(x::CombiSet)
-  return x.sign
-end
-
-
-function evaluate(x::GenCombiSet)
-  return x.value == nothing ? error("Value of the set variable is yet to be calculated") : x.value
 end

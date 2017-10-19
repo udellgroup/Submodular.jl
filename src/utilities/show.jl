@@ -22,8 +22,7 @@ end
 # modularity: ConstModularity()
 function show(io::IO, x::CombiSet)
   print(io, """CombiSet of
-    baseset: $(x.baseset)
-    sign: $(x.sign)""")
+    baseset: $(x.baseset)""")
   if x.elements != nothing
     print(io, "\nelements: $(x.elements)")
   end

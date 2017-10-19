@@ -7,7 +7,7 @@ import Convex: curvature, evaluate, monotonicity, sign, vexity
 import Convex: fix!, free!
 import Convex: min, add_constraints!
 import Convex: Sign, Positive, Negative, NoSign, ComplexSign
-import Convex: +, -, *, .*, /, ./, abs, AbsAtom
+import Convex: +, -, *, .*, /, ./, abs, AbsAtom, vecdot
 import Convex: minimize, maximize, solve!
 import Convex: conic_problem
 
@@ -41,11 +41,11 @@ include("continuous_sets/set_constraints.jl")
 include("continuous_sets/perm.jl")
 include("continuous_sets/poly.jl")
 
-# combinatorial functions
-include("combinatorial_functions/card.jl")
-include("combinatorial_functions/cut.jl")
-include("combinatorial_functions/rank_of_graph_matroid.jl")
-include("combinatorial_functions/modular.jl")
+# submodular functions
+include("submodular_functions/card_based.jl")
+include("submodular_functions/cut.jl")
+include("submodular_functions/rank_of_graph_matroid.jl")
+include("submodular_functions/modular.jl")
 
 # models
 include("models.jl")
