@@ -3,7 +3,7 @@
 # Handles the Lovasz extensions of set functions.
 #############################################################################
 
-export lovasz
+export lovasz, LovaszExtAbsAtom
 export sign, monotonicity, curvature, evaluate
 export ConvexLovaszAbs
 
@@ -17,20 +17,24 @@ type LovaszExtAbsAtom <: AbstractExpr
 
   function LovaszExtAbsAtom(f::CombiFunc, x::AbsAtom)
     if length(f.setvariables) == 1
-      if evaluate(f, [])[1] != 0
-        error("A combinatorial function should be 0 at the empty set to derive its Lovasz extension.")
-      else
-        var = get_v(x)
-        if length(var) != 1
-          error("Functions with other than one variable are not supported.")
+      if length(x.children) == 1 && isa(x.children[1], Variable)
+        if evaluate(f, [])[1] != 0
+          error("A combinatorial function should be 0 at the empty set to derive its Lovasz extension.")
         else
-          if var[1].size[1] == f.setvariables[1].cardinality
-            children = (f, var[1])
-            return new(:lovaszabs, hash(children), children, (1, 1), var[1], f)
+          var = get_v(x)
+          if length(var) != 1
+            error("Functions with other than one variable are not supported.")
           else
-            error("The size of the continuous variable should be the same as the baseset of the combinatorial variable of the combinatorial function.")
+            if var[1].size[1] == f.setvariables[1].cardinality
+              children = (f, var[1])
+              return new(:lovaszabs, hash(children), children, (1, 1), var[1], f)
+            else
+              error("The size of the continuous variable should be the same as the baseset of the combinatorial variable of the combinatorial function.")
+            end
           end
         end
+      else
+        error("Only able to define Lovasz extesions on absolute values of a variable.")
       end
     else
       error("A combinatorial function should be sigle-variant to obtain its Lovasz extension.")

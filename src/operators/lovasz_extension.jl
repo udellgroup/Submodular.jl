@@ -3,7 +3,7 @@
 # Handles the Lovasz extensions of set functions.
 #############################################################################
 
-export lovasz
+export lovasz, LovaszExtAtom
 export sign, monotonicity, curvature, evaluate
 export ConvexLovasz
 
@@ -15,14 +15,14 @@ type LovaszExtAtom <: AbstractExpr
   variable::Variable
   func::CombiFunc
 
-  function LovaszExtAtom(f::CombiFunc, x::Variable)
-    if length(f.setvariables) == 1
-      if evaluate(f, [])[1] != 0
+  function LovaszExtAtom(F::CombiFunc, x::Variable)
+    if length(F.setvariables) == 1
+      if evaluate(F, [])[1] != 0
         error("A combinatorial function should be 0 at the empty set to derive its Lovasz extension.")
       else
-        if x.size[1] == f.setvariables[1].cardinality
-          children = (f, x)
-          return new(:lovasz, hash(children), children, (1, 1), x, f)
+        if x.size[1] == F.setvariables[1].cardinality
+          children = (F, x)
+          return new(:lovasz, hash(children), children, (1, 1), x, F)
         else
           error("The size of the continuous variable should be the same as the baseset of the combinatorial variable of the combinatorial function.")
         end
@@ -33,7 +33,7 @@ type LovaszExtAtom <: AbstractExpr
   end
 end
 
-lovasz(f::CombiFunc, x::Variable) = LovaszExtAtom(f, x)
+lovasz(F::CombiFunc, x::Variable) = LovaszExtAtom(F, x)
 
 function sign(x::LovaszExtAtom)
   return sign(x.children[1])
@@ -58,15 +58,15 @@ end
 
 vexity(x::LovaszExtAtom) = curvature(x)
 
-function evaluate(f::LovaszExtAtom)
-  n = f.children[2].size[1]
-  y = f.children[2].value[:, 1]
+function evaluate(F::LovaszExtAtom)
+  n = F.children[2].size[1]
+  y = F.children[2].value[:, 1]
   i = sortperm(y, rev = true)
-  V = sort(f.children[1].setvariables[1].baseset)
+  V = sort(F.children[1].setvariables[1].baseset)
   storage = zeros(n + 1)
   x = zeros(n)
   for ii = 2:n+1
-    storage[ii] = evaluate(f.children[1], V[i[1:ii-1]])[1]
+    storage[ii] = evaluate(F.children[1], V[i[1:ii-1]])[1]
     x[i[ii - 1]] = storage[ii] - storage[ii - 1]
   end
   # Compatibility with Convex.jl
