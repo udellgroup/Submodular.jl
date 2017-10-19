@@ -59,17 +59,15 @@ include("operators/greedy.jl")
 include("operators/solve_dual.jl")
 
 # algorithms
-include("algos/mininum_norm_point.jl")
+include("algorithms/chambolle_pock.jl")
+include("algorithms/cutting_plane.jl")
+include("algorithms/lp_over_assocpoly.jl")
+include("algorithms/mininum_norm_point.jl")
+include("algorithms/proximal_level_bundle.jl")
 
 # prox
 include("prox/prox_convex.jl")
 include("prox/prox_poly.jl")
-
-# solvers
-include("solvers/chambolle_pock.jl")
-include("solvers/cutting_plane.jl")
-include("solvers/lp_over_assocpoly.jl")
-include("solvers/proximal_level_bundle.jl")
 
 # utilities
 include("utilities/show.jl")
