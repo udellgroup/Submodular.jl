@@ -53,7 +53,13 @@ function evaluate(f::AbstractExpr, w::AbstractArray)
   if isa(var[1], Variable)
     var[1].value = w
   else
-    var[1].elements = w
+    if isa(w, AbstractArray{Int}) == false
+      error("The elements assigned must be integers.")
+    elseif maximum(w) > maximum(var[1].baseset)
+      error("The elements assigned exceeds the cardinality of the base set of the variable.")
+    else
+      var[1].elements = w
+    end
   end
   evaluate(f)
 end
