@@ -14,10 +14,10 @@ type CardBasedAtom <: CombiFunc
   size::Tuple{Int, Int}
   setvariables::Array{SetVariable}
 
-  function CardBasedAtom(x::Function, S::CombiSet)
+  function CardBasedAtom(F::Function, S::CombiSet)
     z = Variable(1)
-    children = (x(z),)                           # create an expression
-    if evaluate(x(z), 0)[1] != 0
+    children = (F(z),)                           # create an expression
+    if evaluate(F(z), 0)[1] != 0
       error("A function has to return 0 at 0 in order to derive a cardinality-based function.")
     end
     setvariables = get_sv(S)
@@ -29,33 +29,33 @@ card(f::Function, S::CombiSet) = CardBasedAtom(f, S)
 
 card(S::CombiSet) = card(x -> x, S)
 
-function sign(x::CardBasedAtom)
-  return sign(x.children[1])
+function sign(F::CardBasedAtom)
+  return sign(F.children[1])
 end
 
-function monotonicity(x::CardBasedAtom)
-  return (monotonicity(x.children[1]), )
+function monotonicity(F::CardBasedAtom)
+  return (monotonicity(F.children[1]), )
 end
 
-function modularity(x::CardBasedAtom)
-  if vexity(x.children[1]) == ConcaveVexity()
+function modularity(F::CardBasedAtom)
+  if vexity(F.children[1]) == ConcaveVexity()
     return SubModularity()
-  elseif vexity(x.children[1]) == ConvexVexity()
+  elseif vexity(F.children[1]) == ConvexVexity()
     return SuperModularity()
-  elseif vexity(x.children[1]) == AffineVexity()
+  elseif vexity(F.children[1]) == AffineVexity()
     return Modularity()
-  elseif vexity(x.children[1]) == ConstVexity()
+  elseif vexity(F.children[1]) == ConstVexity()
     return ConstModularity()
   else
     return NotDetermined()
   end
 end
 
-function evaluate(x::CardBasedAtom)
-  var = x.setvariables[1]
-  var1 = get_v(x.children[1])
+function evaluate(F::CardBasedAtom)
+  var = F.setvariables[1]
+  var1 = get_v(F.children[1])
   var1[1].value = length(Set(get_elements(var)))
-  evaluate(x.children[1])
+  evaluate(F.children[1])
 end
 
 function in(w::AbstractArray, p::SubmodPoly{CardBasedAtom})

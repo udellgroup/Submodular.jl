@@ -35,16 +35,16 @@ end
 
 lovasz(F::CombiFunc, x::Variable) = LovaszExtAtom(F, x)
 
-function sign(x::LovaszExtAtom)
-  return sign(x.children[1])
+function sign(F::LovaszExtAtom)
+  return sign(F.children[1])
 end
 
-function monotonicity(x::LovaszExtAtom)
-  return monotonicity(x.children[1])
+function monotonicity(F::LovaszExtAtom)
+  return monotonicity(F.children[1])
 end
 
-function curvature(x::LovaszExtAtom)
-  modd = modularity(x.children[1])
+function curvature(F::LovaszExtAtom)
+  modd = modularity(F.children[1])
   if modd == SubModularity()
     return ConvexVexity()
   elseif modd == SuperModularity()
@@ -56,7 +56,7 @@ function curvature(x::LovaszExtAtom)
   end
 end
 
-vexity(x::LovaszExtAtom) = curvature(x)
+vexity(F::LovaszExtAtom) = curvature(F)
 
 function evaluate(F::LovaszExtAtom)
   n = F.children[2].size[1]
@@ -75,18 +75,18 @@ function evaluate(F::LovaszExtAtom)
   return val
 end
 
-function get_cv(x::LovaszExtAtom)
+function get_cv(F::LovaszExtAtom)
   variable = []
   return push!(variable, x.variable)
 end
 
-function get_sv(x::LovaszExtAtom)
+function get_sv(F::LovaszExtAtom)
   return []
 end
 
-function get_v(x::LovaszExtAtom)
+function get_v(F::LovaszExtAtom)
   variable = []
-  return push!(variable, x.variable)
+  return push!(variable, F.variable)
 end
 
 # Convex function + Lovasz extension

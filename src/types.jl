@@ -55,7 +55,7 @@ function evaluate(f::AbstractExpr, w::AbstractArray)
   else
     if isa(w, AbstractArray{Int}) == false
       error("The elements assigned must be integers.")
-    elseif maximum(w) > maximum(var[1].baseset)
+    elseif maximum(w) > maximum(var[1].baseset) || minimum(w) < minimum(var[1].baseset)
       error("The elements assigned exceeds the cardinality of the base set of the variable.")
     else
       var[1].elements = w
@@ -67,10 +67,16 @@ end
 function evaluate(f::AbstractExpr, w::Val...)
   var = get_v(f)
   for i = 1:length(w)
-    if isa(var[i], Variable)
-      var[i].value = w[i]
+    if isa(var[1], Variable)
+      var[1].value = w
     else
-      var[i].elements = w[i]
+      if isa(w, AbstractArray{Int}) == false
+        error("The elements assigned must be integers.")
+      elseif maximum(w) > maximum(var[1].baseset) || minimum(w) < minimum(var[1].baseset)
+        error("The elements assigned exceeds the cardinality of the base set of the variable.")
+      else
+        var[1].elements = w
+      end
     end
   end
   evaluate(f)

@@ -8,26 +8,26 @@ export greedy, greedy_rand
 TOL = 1e-2
 
 # Computes one solution
-function greedy(f::Function, w::AbstractArray,
+function greedy(F::Function, w::AbstractArray,
                 S = collect(1:length(w))::AbstractArray)
-  @assert f([])[1] == 0 # f should be 0 at the empty set
+  @assert F([])[1] == 0 # f should be 0 at the empty set
   n = length(w)
   @assert length(S) == n
   i = sortperm(w, rev = true)
   V = sort(S)
   x = zeros(n)
   for ii = 1:n
-    x[i[ii]] = f(V[i[1: ii]])[1] - f(V[i[1: ii-1]])[1]
+    x[i[ii]] = F(V[i[1: ii]])[1] - F(V[i[1: ii-1]])[1]
   end
   return x
 end
 
-greedy(f::CombiFunc, w::AbstractArray) = greedy(x -> evaluate(f, x), w)
+greedy(F::CombiFunc, w::AbstractArray) = greedy(x -> evaluate(F, x), w)
 
 # Compute a solution with indexed on the same level set permutated
-function greedy_rand(f::Function, w::AbstractArray, tol = 1e-3 ::Number,
+function greedy_rand(F::Function, w::AbstractArray, tol = 1e-3 ::Number,
                     S = collect(1:length(w))::AbstractArray)
-  @assert f([])[1] == 0       # f should be 0 at the empty set
+  @assert F([])[1] == 0       # f should be 0 at the empty set
   n = length(w)
   @assert length(S) == n
   ordering = sortperm(w, rev = true)
@@ -54,9 +54,9 @@ function greedy_rand(f::Function, w::AbstractArray, tol = 1e-3 ::Number,
   new_ordering = Int.(new_ordering)
   x = zeros(n)
   for ii = 1:n
-    x[new_ordering[ii]] = f(V[new_ordering[1: ii]])[1] - f(V[new_ordering[1: ii-1]])[1]
+    x[new_ordering[ii]] = F(V[new_ordering[1: ii]])[1] - F(V[new_ordering[1: ii-1]])[1]
   end
   return x, pernum, new_ordering
 end
 
-greedy_rand(f::CombiFunc, w::AbstractArray, tol::Number) = greedy_rand(x -> evaluate(f, x), w, tol)
+greedy_rand(F::CombiFunc, w::AbstractArray, tol::Number) = greedy_rand(x -> evaluate(F, x), w, tol)
