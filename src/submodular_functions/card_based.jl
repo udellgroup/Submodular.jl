@@ -17,7 +17,7 @@ type CardBasedAtom <: CombiFunc
   function CardBasedAtom(F::Function, S::CombiSet)
     z = Variable(1)
     children = (F(z),)                           # create an expression
-    if evaluate(F(z), 0)[1] != 0
+    if F(0) != 0
       error("A function has to return 0 at 0 in order to derive a cardinality-based function.")
     end
     setvariables = get_sv(S)

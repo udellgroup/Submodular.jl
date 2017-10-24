@@ -102,7 +102,5 @@ function evaluate(F::ModularAtom) # TODO only allow scalar input
     summ += param[i]
   end
   # Compatibility with Convex.jl
-  val = zeros(1, 1)
-  val[1] = summ
-  return val
+  return summ
 end

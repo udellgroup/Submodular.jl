@@ -17,7 +17,7 @@ type RankOfGraphicMatroidAtom <: CombiFunc
 
   function RankOfGraphicMatroidAtom(g::AbstractGraph, S::CombiSet)
     if ne(g) != S.cardinality
-      error("Cannot define a modular function when the vector's size is different from the (card(baseset), 1).")
+      error("Cannot define a rank function of a graphic matroid when the number of edges in the graph is different from the size of the set variable.")
     else
       children = (g, S)
       setvariables = get_sv(S)

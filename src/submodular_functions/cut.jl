@@ -17,7 +17,7 @@ type CutAtom <: CombiFunc
 
   function CutAtom(g::AbstractGraph, S::CombiSet)
     if nv(g) != S.cardinality
-      error("Cannot define a modular function when the vector's size is different from the (card(baseset), 1).")
+      error("Cannot define a cut function when the number of vertices in the graph is different from the size of the set variable.")
     else
       children = (g, S)
       setvariables = get_sv(S)
