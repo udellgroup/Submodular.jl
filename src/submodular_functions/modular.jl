@@ -7,7 +7,7 @@ export modular
 export lovasz
 export sign, monotonicity, modularity, evaluate
 
-type ModularAtom <: CombiFunc   # TODO: extend to sets other than plain set varables
+type ModularAtom <: SubmodFunc   # TODO: extend to sets other than plain set varables
   head::Symbol
   id_hash::UInt64
   children::Tuple{AbstractExpr, CombiSet}

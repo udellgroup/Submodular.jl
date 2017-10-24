@@ -29,13 +29,13 @@ function show(io::IO, x::CombiSet)
 end
 
 # An combinatorial function, for example, card(x)^2, will be displayed as:
-# CombiFunc with
+# SubmodFunc with
 # head: card
 # size: (1, 1)
 # sign: Positive()
 # modularity: SuperModularity()
-function show(io::IO, f::CombiFunc)
-  print(io, """CombiFunc with
+function show(io::IO, f::SubmodFunc)
+  print(io, """SubmodFunc with
     head: $(f.head)
     size: ($(f.size[1]), $(f.size[2]))
     sign: $(sign(f))

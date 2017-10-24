@@ -26,14 +26,13 @@ id_to_variables = Dict{UInt64, SetVariable}()
 
 # fix set variables to hold them at their current value, and free them afterwards
 function fix!(x::SetVariable)
-  x.value == nothing && error("This set variable has not been assigned elements yet; cannot fix value to nothing!")
-  push!(x.sets, :fixed)
+  x.elements == nothing && error("This set variable has not been assigned elements yet; cannot fix value to nothing!")
   x
 end
 
 function fix!(x::SetVariable, v)
   # TODO: check value inclusion
-  x.value = v
+  x.elements = v
   fix!(x)
 end
 
@@ -91,7 +90,7 @@ function get_sv(x::AbstractExpr)
   end
 end
 
-function get_sv(f::CombiFunc)
+function get_sv(f::SubmodFunc)
   return f.setvariables
 end
 
@@ -121,7 +120,7 @@ function get_v(x::AbstractExpr)
   end
 end
 
-function get_v(f::CombiFunc)
+function get_v(f::SubmodFunc)
   return f.setvariables
 end
 

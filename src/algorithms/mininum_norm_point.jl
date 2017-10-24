@@ -171,7 +171,7 @@ function minimum_check(p::AssocPoly, w::AbstractArray, x::AbstractArray, S::Abst
   end
 end
 
-function minimum_norm_point(f::CombiFunc, w::AbstractArray)
+function minimum_norm_point(f::SubmodFunc, w::AbstractArray)
   p = BasePoly(f)
   return minimum_norm_point(p, w)
 end

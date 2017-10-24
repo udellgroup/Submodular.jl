@@ -37,12 +37,9 @@ function intersect(set::AllCombiSet...)
       elements = collect(Set(elements))
       return elements
     else
-      for i = 2:n
+      for i = 1:n
         if isa(sets[i], CombiSet)
           baseset = union(baseset, Set(sets[i].baseset))
-        else
-          seti = Set(sets[i])
-          baseset = union(baseset, seti)
         end
       end
       baseset = collect(baseset)

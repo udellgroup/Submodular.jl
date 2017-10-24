@@ -7,7 +7,7 @@
 export cut
 export sign, monotonicity, modularity, evaluate
 
-type CutAtom <: CombiFunc
+type CutAtom <: SubmodFunc
   head::Symbol
   id_hash::UInt64
   children::Tuple{AbstractGraph, CombiSet}

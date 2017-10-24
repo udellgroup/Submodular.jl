@@ -7,7 +7,7 @@ export card, compose
 export in
 export sign, monotonicity, modularity, evaluate
 
-type CardBasedAtom <: CombiFunc
+type CardBasedAtom <: SubmodFunc
   head::Symbol
   id_hash::UInt64
   children::Tuple{AbstractExpr}

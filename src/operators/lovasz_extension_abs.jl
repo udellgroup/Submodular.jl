@@ -13,9 +13,9 @@ type LovaszExtAbsAtom <: AbstractExpr
   children::Tuple{AbstractExpr, Variable}
   size::Tuple{Int, Int}
   variable::Variable
-  func::CombiFunc
+  func::SubmodFunc
 
-  function LovaszExtAbsAtom(F::CombiFunc, x::AbsAtom)
+  function LovaszExtAbsAtom(F::SubmodFunc, x::AbsAtom)
     if length(F.setvariables) == 1
       if length(x.children) == 1 && isa(x.children[1], Variable)
         if evaluate(F, [])[1] != 0
@@ -42,7 +42,7 @@ type LovaszExtAbsAtom <: AbstractExpr
   end
 end
 
-lovasz(F::CombiFunc, x::AbsAtom) = LovaszExtAbsAtom(F, x)
+lovasz(F::SubmodFunc, x::AbsAtom) = LovaszExtAbsAtom(F, x)
 
 function sign(F::LovaszExtAbsAtom)
   return sign(F.children[1])

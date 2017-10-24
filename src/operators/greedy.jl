@@ -22,7 +22,7 @@ function greedy(F::Function, w::AbstractArray,
   return x
 end
 
-greedy(F::CombiFunc, w::AbstractArray) = greedy(x -> evaluate(F, x), w)
+greedy(F::SubmodFunc, w::AbstractArray) = greedy(x -> evaluate(F, x), w)
 
 # Compute a solution with indexed on the same level set permutated
 function greedy_rand(F::Function, w::AbstractArray, tol = 1e-3 ::Number,
@@ -59,4 +59,4 @@ function greedy_rand(F::Function, w::AbstractArray, tol = 1e-3 ::Number,
   return x, pernum, new_ordering
 end
 
-greedy_rand(F::CombiFunc, w::AbstractArray, tol::Number) = greedy_rand(x -> evaluate(F, x), w, tol)
+greedy_rand(F::SubmodFunc, w::AbstractArray, tol::Number) = greedy_rand(x -> evaluate(F, x), w, tol)

@@ -1,9 +1,9 @@
 #############################################################################
 # types.jl
-# Defines CombiFunc and Sets.
-# CombiFunc subtypes of Convex.AbstractExpr, and is subtyped by atoms which
+# Defines SubmodFunc and Sets.
+# SubmodFunc subtypes of Convex.AbstractExpr, and is subtyped by atoms which
 # are combinatorial functions.
-# Each type which subtypes CombiFunc must have:
+# Each type which subtypes SubmodFunc must have:
 #
 ## head::Symbol                  -- a symbol such as :vecnorm, :+ etc
 ## children::(AbstractExpr,)     -- the expressions on which the current expression
@@ -27,14 +27,14 @@
 #############################################################################
 
 export Val, ValOrNothing
-export CombiFunc, CombiSet, AllCombiSet, ContiSet, SCOPEModel
+export SubmodFunc, CombiSet, AllCombiSet, ContiSet, SCOPEModel
 
 # Type of values
 const Val = Union{Number, AbstractArray}
 const ValOrNothing = Union{Val, Void}
 
 ### Combinatorial functions
-abstract type CombiFunc <: AbstractExpr end
+abstract type SubmodFunc <: AbstractExpr end
 
 ### Combinatorial sets
 abstract type CombiSet <: AbstractExpr end

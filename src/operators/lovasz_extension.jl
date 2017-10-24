@@ -13,9 +13,9 @@ type LovaszExtAtom <: AbstractExpr
   children::Tuple{AbstractExpr, Variable}
   size::Tuple{Int, Int}
   variable::Variable
-  func::CombiFunc
+  func::SubmodFunc
 
-  function LovaszExtAtom(F::CombiFunc, x::Variable)
+  function LovaszExtAtom(F::SubmodFunc, x::Variable)
     if length(F.setvariables) == 1
       if evaluate(F, [])[1] != 0
         error("A combinatorial function should be 0 at the empty set to derive its Lovasz extension.")
@@ -33,7 +33,7 @@ type LovaszExtAtom <: AbstractExpr
   end
 end
 
-lovasz(F::CombiFunc, x::Variable) = LovaszExtAtom(F, x)
+lovasz(F::SubmodFunc, x::Variable) = LovaszExtAtom(F, x)
 
 function sign(F::LovaszExtAtom)
   return sign(F.children[1])

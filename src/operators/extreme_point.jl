@@ -17,4 +17,4 @@ function extremepoint(F::Function, w::AbstractArray,
   return x
 end
 
-extremepoint(F::CombiFunc, w::AbstractArray) = extremepoint(x -> evaluate(F, x), w)
+extremepoint(F::SubmodFunc, w::AbstractArray) = extremepoint(x -> evaluate(F, x), w)
