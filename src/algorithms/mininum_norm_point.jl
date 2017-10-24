@@ -88,8 +88,6 @@ function major_cycle(p::AssocPoly, w::AbstractArray, x::AbstractArray, S::Abstra
   end
 end
 
-
-
 function major_cycle(p::SubmodPoly, w::AbstractArray, x::AbstractArray, S::AbstractMatrix)
   n = length(w)
   a = x - w
