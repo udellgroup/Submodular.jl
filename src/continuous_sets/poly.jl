@@ -80,7 +80,7 @@ end
 
 # check if w is in p
 
-function in(p::AssocPoly, w::AbstractArray)
+function in(w::AbstractArray, p::AssocPoly)
   n = length(w)
   @assert length(p.V) == n
   x = prox(p, w)

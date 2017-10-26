@@ -28,25 +28,25 @@ facts("Continuous Sets") do
     @fact in([-2, -2, -5, -3], P₁) --> true
 
     P₂ = BasePoly(perm_func)
-    @fact prox(P₂, [1, 2, 5, 3]) --> roughly([1, 2, 4, 3], Tol)
-    @fact prox(P₂, [1, 2, 4, 3]) --> roughly([1, 2, 4, 3], Tol)
-    @fact prox(P₂, [1, 2, 3, 3]) --> roughly([1.25, 2.25, 3.25, 3.25], Tol)
-    @fact prox(P₂, [-1, -2, 0, 0]) --> roughly([2.25, 1.25, 3.25, 3.25], Tol)
-    @fact prox(P₂, [-2, -2, -5, -3]) --> roughly([3.33333, 3.33333, 1, 2.33333], Tol)
-    #
-    # P₃ = PosPoly(perm_func)
-    # @fact prox(P₂, [1, 2, 5, 3]) --> roughly([1, 2, 4, 3], Tol)
-    # @fact prox(P₂, [1, 2, 4, 3]) --> roughly([1, 2, 4, 3], Tol)
-    # @fact prox(P₂, [1, 2, 3, 3]) --> roughly([1.25, 2.25, 3.25, 3.25], Tol)
-    # @fact prox(P₂, [-1, -2, 0, 0]) --> roughly([0, 0, 0, 0], Tol)
-    # @fact prox(P₂, [-2, -2, -5, -3]) --> roughly([0, 0, 0, 0], Tol)
-    #
-    # P₄ = SymPoly(perm_func)
-    # @fact in([1, 2, 5, 3], P₄) --> false
-    # @fact in([1, 2, 3, 3], P₄) --> true
-    # @fact in([1, 2, 3, 3], P₄) --> true
-    # @fact in([-1, -2, 0, 0], P₄) --> true
-    # @fact in([2, 2, 5, 3], P₄) --> false
+    @fact in([1, 2, 5, 3], P₂) --> false
+    @fact in([1, 2, 4, 3], P₂) --> true
+    @fact in([1, 2, 3, 3], P₂) --> false
+    @fact in([-1, -2, 0, 0], P₂) --> false
+    @fact in([-2, -2, -5, -3], P₂) --> false
+
+    P₃ = PosPoly(perm_func)
+    @fact in([1, 2, 5, 3], P₃) --> false
+    @fact in([1, 2, 4, 3], P₃) --> true
+    @fact in([1, 2, 3, 3], P₃) --> true
+    @fact in([-1, -2, 0, 0], P₃) --> false
+    @fact in([-2, -2, -5, -3], P₃) --> false
+
+    P₄ = SymPoly(perm_func)
+    @fact in([1, 2, 5, 3], P₄) --> false
+    @fact in([1, 2, 4, 3], P₄) --> true
+    @fact in([1, 2, 3, 3], P₄) --> true
+    @fact in([-1, -2, 0, 0], P₄) --> true
+    @fact in([-2, -2, -5, -3], P₄) --> false
   end
 
 end
