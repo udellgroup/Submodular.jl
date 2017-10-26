@@ -7,13 +7,13 @@ import Convex: curvature, evaluate, monotonicity, sign, vexity
 import Convex: fix!, free!
 import Convex: min, add_constraints!
 import Convex: Sign, Positive, Negative, NoSign, ComplexSign
-import Convex: +, -, *, .*, /, ./, abs, AbsAtom
+import Convex: +, -, *, .*, /, ./, abs, AbsAtom, vecdot
 import Convex: minimize, maximize, solve!
 import Convex: conic_problem
 
 import ForwardDiff: gradient
 
-import LightGraphs: AbstractGraph, nv, edges, weights, src, dst, induced_subgraph, connected_components, modularity
+import LightGraphs: AbstractGraph, AbstractEdge, nv, ne, edges, Edge, weights, src, dst, induced_subgraph, connected_components, modularity
 
 import MathProgBase: ConicModel, loadproblem!, optimize!, numvar, AbstractMathProgSolver
 
@@ -41,11 +41,11 @@ include("continuous_sets/set_constraints.jl")
 include("continuous_sets/perm.jl")
 include("continuous_sets/poly.jl")
 
-# combinatorial functions
-include("combinatorial_functions/card.jl")
-include("combinatorial_functions/cut.jl")
-include("combinatorial_functions/rank_of_graph_matroid.jl")
-include("combinatorial_functions/modular.jl")
+# submodular functions
+include("submodular_functions/card_based.jl")
+include("submodular_functions/cut.jl")
+include("submodular_functions/rank_of_graph_matroid.jl")
+include("submodular_functions/modular.jl")
 
 # models
 include("models.jl")
@@ -59,17 +59,14 @@ include("operators/greedy.jl")
 include("operators/solve_dual.jl")
 
 # algorithms
-include("algos/mininum_norm_point.jl")
+include("algorithms/chambolle_pock.jl")
+include("algorithms/cutting_plane.jl")
+include("algorithms/lp_over_assocpoly.jl")
+include("algorithms/mininum_norm_point.jl")
+include("algorithms/proximal_level_bundle.jl")
 
 # prox
 include("prox/prox_convex.jl")
-include("prox/prox_poly.jl")
-
-# solvers
-include("solvers/chambolle_pock.jl")
-include("solvers/cutting_plane.jl")
-include("solvers/lp_over_assocpoly.jl")
-include("solvers/proximal_level_bundle.jl")
 
 # utilities
 include("utilities/show.jl")

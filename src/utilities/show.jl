@@ -22,21 +22,20 @@ end
 # modularity: ConstModularity()
 function show(io::IO, x::CombiSet)
   print(io, """CombiSet of
-    baseset: $(x.baseset)
-    sign: $(x.sign)""")
+    baseset: $(x.baseset)""")
   if x.elements != nothing
     print(io, "\nelements: $(x.elements)")
   end
 end
 
 # An combinatorial function, for example, card(x)^2, will be displayed as:
-# CombiFunc with
+# SubmodFunc with
 # head: card
 # size: (1, 1)
 # sign: Positive()
 # modularity: SuperModularity()
-function show(io::IO, f::CombiFunc)
-  print(io, """CombiFunc with
+function show(io::IO, f::SubmodFunc)
+  print(io, """SubmodFunc with
     head: $(f.head)
     size: ($(f.size[1]), $(f.size[2]))
     sign: $(sign(f))

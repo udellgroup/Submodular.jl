@@ -28,7 +28,7 @@ type SubmodPoly{T} <: AssocPoly
   V::AbstractArray # indexes of the base set
 end
 
-function SubmodPoly{T<:CombiFunc}(f::T)
+function SubmodPoly{T<:SubmodFunc}(f::T)
   @assert evaluate(f, [])[1] == 0
   x = get_sv(f)[1]
   V = x.baseset
@@ -41,7 +41,7 @@ type BasePoly{T} <: AssocPoly
   V::AbstractArray
 end
 
-function BasePoly{T<:CombiFunc}(f::T)
+function BasePoly{T<:SubmodFunc}(f::T)
   @assert evaluate(f, [])[1] == 0
   x = get_sv(f)[1]
   V = x.baseset
@@ -54,7 +54,7 @@ type PosPoly{T} <: AssocPoly
   V::AbstractArray
 end
 
-function PosPoly{T<:CombiFunc}(f::T)
+function PosPoly{T<:SubmodFunc}(f::T)
   @assert evaluate(f, [])[1] == 0
   x = get_sv(f)[1]
   V = x.baseset
@@ -67,7 +67,7 @@ type SymPoly{T} <: AssocPoly
   V::AbstractArray
 end
 
-function SymPoly{T<:CombiFunc}(f::T)
+function SymPoly{T<:SubmodFunc}(f::T)
   @assert evaluate(f, [])[1] == 0
   x = get_sv(f)[1]
   V = x.baseset
@@ -80,7 +80,7 @@ end
 
 # check if w is in p
 
-function in(p::AssocPoly, w::AbstractArray)
+function in(w::AbstractArray, p::AssocPoly)
   n = length(w)
   @assert length(p.V) == n
   x = prox(p, w)

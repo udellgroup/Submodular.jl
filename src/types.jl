@@ -1,9 +1,9 @@
 #############################################################################
 # types.jl
-# Defines CombiFunc and Sets.
-# CombiFunc subtypes of Convex.AbstractExpr, and is subtyped by atoms which
+# Defines SubmodFunc and Sets.
+# SubmodFunc subtypes of Convex.AbstractExpr, and is subtyped by atoms which
 # are combinatorial functions.
-# Each type which subtypes CombiFunc must have:
+# Each type which subtypes SubmodFunc must have:
 #
 ## head::Symbol                  -- a symbol such as :vecnorm, :+ etc
 ## children::(AbstractExpr,)     -- the expressions on which the current expression
@@ -27,14 +27,14 @@
 #############################################################################
 
 export Val, ValOrNothing
-export CombiFunc, CombiSet, AllCombiSet, ContiSet, SCOPEModel
+export SubmodFunc, CombiSet, AllCombiSet, ContiSet, SCOPEModel
 
 # Type of values
 const Val = Union{Number, AbstractArray}
 const ValOrNothing = Union{Val, Void}
 
 ### Combinatorial functions
-abstract type CombiFunc <: AbstractExpr end
+abstract type SubmodFunc <: AbstractExpr end
 
 ### Combinatorial sets
 abstract type CombiSet <: AbstractExpr end
@@ -53,7 +53,17 @@ function evaluate(f::AbstractExpr, w::AbstractArray)
   if isa(var[1], Variable)
     var[1].value = w
   else
-    var[1].elements = w
+    if w != []
+      if isa(w, AbstractArray{Int}) == false
+        error("The elements assigned must be integers.")
+      elseif maximum(w) > maximum(var[1].baseset) || minimum(w) < minimum(var[1].baseset)
+        error("The elements assigned exceeds the cardinality of the base set of the variable.")
+      else
+        var[1].elements = w
+      end
+    else
+      var[1].elements = []
+    end
   end
   evaluate(f)
 end
@@ -61,10 +71,16 @@ end
 function evaluate(f::AbstractExpr, w::Val...)
   var = get_v(f)
   for i = 1:length(w)
-    if isa(var[i], Variable)
-      var[i].value = w[i]
+    if isa(var[1], Variable)
+      var[1].value = w
     else
-      var[i].elements = w[i]
+      if isa(w, AbstractArray{Int}) == false
+        error("The elements assigned must be integers.")
+      elseif maximum(w) > maximum(var[1].baseset) || minimum(w) < minimum(var[1].baseset)
+        error("The elements assigned exceeds the cardinality of the base set of the variable.")
+      else
+        var[1].elements = w
+      end
     end
   end
   evaluate(f)
