@@ -67,6 +67,7 @@ include("algorithms/proximal_level_bundle.jl")
 
 # prox
 include("prox/prox_convex.jl")
+include("prox/prox_poly.jl")
 
 # utilities
 include("utilities/show.jl")

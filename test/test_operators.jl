@@ -1,7 +1,7 @@
 using CombiOpt
 using FactCheck
 
-TOL = 1e-3
+Tol = 1e-3
 
 facts("Operators") do
 
@@ -23,8 +23,8 @@ facts("Operators") do
     end
     w1 = [.5, 1]
     w2 = [1, .5]
-    @fact lovasz(twodim, w1) - dot([2, 2], w1) --> roughly(0, TOL)
-    @fact lovasz(twodim, w2) - dot([3, 1], w2) --> roughly(0, TOL)
+    @fact lovasz(twodim, w1) - dot([2, 2], w1) --> roughly(0, Tol)
+    @fact lovasz(twodim, w2) - dot([3, 1], w2) --> roughly(0, Tol)
 
     # the Lovasz extionsion of a modular function is a linear function
     c = rand(4)
@@ -37,7 +37,7 @@ facts("Operators") do
     end
     A = [1, 2, 4]
     x = rand(3)
-    @fact lovasz(modular, x, A) - dot(c[A], x)  --> roughly(0, TOL)
+    @fact lovasz(modular, x, A) - dot(c[A], x)  --> roughly(0, Tol)
   end
 
   context("Affine Projection") do
@@ -45,9 +45,9 @@ facts("Operators") do
     w1 = [2, 2]
     w2 = [3, 2]
     w3 = [5, 0]
-    @fact affpro(w1, S) --> roughly([2, 2], TOL)
-    @fact affpro(w2, S) --> roughly([2.5, 1.5], TOL)
-    @fact affpro(w3, S) --> roughly([4.5, -0.5], TOL)
+    @fact affpro(w1, S) --> roughly([2, 2], Tol)
+    @fact affpro(w2, S) --> roughly([2.5, 1.5], Tol)
+    @fact affpro(w3, S) --> roughly([4.5, -0.5], Tol)
   end
 
 end

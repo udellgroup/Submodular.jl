@@ -4,7 +4,7 @@
 # minimum norm in the base polyhedron.
 #############################################################################
 
-export minimum_norm_point, prox
+export minimum_norm_point
 
 Tol = 1e-3
 
@@ -164,5 +164,3 @@ function minimum_norm_point(f::SubmodFunc, w::AbstractArray)
   p = BasePoly(f)
   return minimum_norm_point(p, w)
 end
-
-prox(p::AssocPoly, w::AbstractArray) = minimum_norm_point(p, w)

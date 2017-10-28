@@ -1,7 +1,7 @@
 using CombiOpt
 using FactCheck
 
-TOL = 1e-3
+Tol = 1e-3
 
 facts("Continuous Sets") do
 
@@ -12,7 +12,7 @@ facts("Continuous Sets") do
     d2 = collect(2:5)
     @fact in(d2, p) --> false
     w = [.4,.2,.6,.3]
-    @fact fenchel(p, w) --> roughly([2, 4, 1, 3], TOL)
+    @fact fenchel(p, w) --> roughly([2, 4, 1, 3], Tol)
   end
 
   context("associated polyhedra") do

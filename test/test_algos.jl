@@ -1,7 +1,7 @@
 using CombiOpt
 using FactCheck
 
-TOL = 1e-3
+Tol = 1e-3
 
 facts("Algorithms") do
 
@@ -34,14 +34,14 @@ facts("Algorithms") do
     w7 = [50, -3]
     w8 = [-5, 1]
 
-    @fact minimum_norm(twodim, V, w1) --> roughly([3, 1], TOL)
-    @fact minimum_norm(twodim, V, w2) --> roughly([2, 2], TOL)
-    @fact minimum_norm(twodim, V, w3) --> roughly([2, 2], TOL)
-    @fact minimum_norm(twodim, V, w4) --> roughly([2.5, 1.5], TOL)
-    @fact minimum_norm(twodim, V, w5) --> roughly([2, 2], TOL)
-    @fact minimum_norm(twodim, V, w6) --> roughly([2, 2], TOL)
-    @fact minimum_norm(twodim, V, w7) --> roughly([3, 1], TOL)
-    @fact minimum_norm(twodim, V, w8) --> roughly([2, 2], TOL)
+    @fact minimum_norm(twodim, V, w1) --> roughly([3, 1], Tol)
+    @fact minimum_norm(twodim, V, w2) --> roughly([2, 2], Tol)
+    @fact minimum_norm(twodim, V, w3) --> roughly([2, 2], Tol)
+    @fact minimum_norm(twodim, V, w4) --> roughly([2.5, 1.5], Tol)
+    @fact minimum_norm(twodim, V, w5) --> roughly([2, 2], Tol)
+    @fact minimum_norm(twodim, V, w6) --> roughly([2, 2], Tol)
+    @fact minimum_norm(twodim, V, w7) --> roughly([3, 1], Tol)
+    @fact minimum_norm(twodim, V, w8) --> roughly([2, 2], Tol)
   end
 
 end
