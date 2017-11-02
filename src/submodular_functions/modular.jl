@@ -15,20 +15,20 @@ type ModularAtom <: SubmodFunc   # TODO: extend to sets other than plain set var
   param::AbstractExpr
   setvariables::Array{CombiSet}
 
-  function ModularAtom(x::AbstractExpr, S::CombiSet)
-    if x.size != (S.cardinality, 1)
+  function ModularAtom(w::AbstractExpr, S::CombiSet)
+    if w.size != (S.cardinality, 1)
       error("Cannot define a modular function when the vector's size is different from the (card(baseset), 1).")
     else
-      children = (x, S)
+      children = (w, S)
       setvariables = get_sv(S)
-      return new(:modular, hash(children), children, (1, 1), x, setvariables)
+      return new(:modular, hash(children), children, (1, 1), w, setvariables)
     end
   end
 end
 
-modular(x::Variable, S::CombiSet) = ModularAtom(x, S)
+modular(w::Variable, S::CombiSet) = ModularAtom(w, S)
 
-modular(x::Val, S::CombiSet) = ModularAtom(Constant(x), S)
+modular(w::Val, S::CombiSet) = ModularAtom(Constant(w), S)
 
 function lovasz(F::ModularAtom, x::Variable)
   if length(F.setvariables) == 1

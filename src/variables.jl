@@ -46,14 +46,14 @@ end
 function get_cv(x::AbstractExpr)
   if isa(x, Variable) || (typeof(x) == Constant) || (typeof(x) == SetVariable)
     if isa(x, Variable)
-      cv = []
+      cv = Variable[]
       push!(cv, x)
       return cv
     else
       return []
     end
   else
-    cv = []
+    cv = Variable[]
     for i = 1:length(x.children)
       cvi = get_cv(x.children[i])
       cv = vcat(cv, cvi)
@@ -72,14 +72,14 @@ end
 function get_sv(x::AbstractExpr)
   if isa(x, Variable) || (typeof(x) == Constant) || (typeof(x) == SetVariable)
     if isa(x, SetVariable)
-      sv = []
+      sv = SetVariable[]
       push!(sv, x)
       return sv
     else
       return []
     end
   else
-    sv = []
+    sv = SetVariable[]
     for i = 1:length(x.children)
       svi = get_sv(x.children[i])
       sv = vcat(sv, svi)
@@ -102,14 +102,14 @@ end
 function get_v(x::AbstractExpr)
   if isa(x, Variable) || (typeof(x) == Constant) || (typeof(x) == SetVariable)
     if isa(x, Variable) || typeof(x) == SetVariable
-      v = []
+      v = AbstractExpr[]
       push!(v, x)
       return v
     else
       return []
     end
   else
-    v = []
+    v = AbstractExpr[]
     for i = 1:length(x.children)
       vi = get_v(x.children[i])
       v = vcat(v, vi)

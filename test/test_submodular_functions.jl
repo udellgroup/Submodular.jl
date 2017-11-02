@@ -14,6 +14,10 @@ facts("Submodular Functions") do
     perm_func = compose(p, F)
     @fact modularity(perm_func) --> SubModularity()
     @fact evaluate(perm_func, [1, 2, 3])[1] --> roughly(6, Tol)
+
+    F₁ = card([3.0, 2, 1], S)
+    @fact modularity(F₁) --> SubModularity()
+    @fact evaluate(F₁, [1, 3]) --> roughly(5, Tol)
   end
 
   context("cut atom") do

@@ -21,7 +21,7 @@ type RankOfGraphicMatroidAtom <: SubmodFunc
     else
       children = (g, S)
       setvariables = get_sv(S)
-      return new(:rankofgraphmatroid, hash(children), children, (1, 1), g, setvariables)
+      return new(:rankofgraphicmatroid, hash(children), children, (1, 1), g, setvariables)
     end
   end
 end

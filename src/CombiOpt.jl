@@ -59,6 +59,7 @@ include("operators/greedy.jl")
 include("operators/solve_dual.jl")
 
 # algorithms
+include("algorithms/card_inc_fix.jl")
 include("algorithms/chambolle_pock.jl")
 include("algorithms/cutting_plane.jl")
 include("algorithms/lp_over_assocpoly.jl")

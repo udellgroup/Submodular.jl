@@ -21,7 +21,7 @@ type SuperModularity <: ExprModularity	end
 type Modularity <: ExprModularity       end
 type ConstModularity <: ExprModularity  end
 
-type NotDetermined <: Vexity
+type NotDetermined <: ExprModularity
 	function NotDetermined()
 		warn("Expression's modularity is not determined. Trying to solve problems with uncertain modularity can lead to unexpected behavior.")
     return new()

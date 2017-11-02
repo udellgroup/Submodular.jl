@@ -42,6 +42,10 @@ function modularity(F::CutAtom)
     return SubModularity()
   elseif all(x -> x <=0, w)
     return SuperModularity()
+  elseif all(x -> x==0, w)
+    return ConstModularity()
+  else
+    return NotDetermined()
   end
 end
 
