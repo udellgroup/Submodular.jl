@@ -1,13 +1,13 @@
 #Function to minimize Bregman divergences h() with respect to a given
 #vector y over the submodular base polytope of a cardinality-based submodular function
 
-using Distributions
+# using Distributions
 
 export card_inc_fix
 
 function card_inc_fix(F::CardBasedAtom,
 	                    w₀::AbstractArray,
-										  divergence)
+										  divergence::String = "euclidean")
   # here F(S) = g(|S|) for some non-decreasing concave function g, g(0)=0.
   # currently implemented for divergences: Euclidean
   # check if g is concave, non-decreasing, g is an Array for now
@@ -69,45 +69,3 @@ function card_inc_fix(F::CardBasedAtom,
 	end
 	return temp
 end
-
-################################
-
-n = 20
-println("Example on a ground set of $n elements:")
-
-g = rand(n)
-g = sort(g, rev=true)
-g = (g + 0.1)/1.01
-h = copy(g)
-for i = 2: n
-  g[i] = g[i] + g[i-1]
-end
-# g is a concave non-decreasing function
-println("Cardinality-based submodular function F(S) = g(|S|), where g is given by:")
-println("g = ",g)
-y = rand(n) # point to project on the base polytope of F(S) = g(|S|)
-println()
-println("The random point y that we are projecting on the base polytope B(F) is:")
-println("y = ", y)
-
-S = SetVariable(n)
-gg = card(h, S)
-
-
-euclidean_proj = card_inc_fix(gg, y, "euclidean")
-println()
-println("The computed Euclidean projection is: ")
-println("projection = ", euclidean_proj)
-
-#sanity checks:
-println()
-println("Performing sanity checks: ")
-println("Is the sorted order of indices in y and the projection the same?")
-#this is a known property of projections under uniform divergences over cardinality-based polytopes
-println(sortperm(y) == sortperm(euclidean_proj[1:n]))
-
-println("Is the constraint x(E) = F(E) = g(n) satisfied upto an error of 10^-10?")
-sum(euclidean_proj)>=g[n]-(10.0)^(-10)
-sum(euclidean_proj)<=g[n]+(10.0)^(-10)
-
-##############################

@@ -34,7 +34,11 @@ function CardBasedAtom{T<:Array{Float64}}(w::T, S::CombiSet)
   elseif size(w) != (setvariables[1].cardinality, )
     error("The sizes of the set variable and the array mismatch.")
   end
-  return(CardBasedAtom(:card, hash(children), children, (1, 1), setvariables, w))
+  w₁ = copy(w)
+  for i = 2:length(w)
+    w₁[i] = w[i] - w[i-1]
+  end
+  return(CardBasedAtom(:card, hash(children), children, (1, 1), setvariables, w₁))
 end
 
 card(f::Function, S::CombiSet) = CardBasedAtom(f, S)

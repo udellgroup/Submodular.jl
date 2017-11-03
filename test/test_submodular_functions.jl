@@ -15,7 +15,7 @@ facts("Submodular Functions") do
     @fact modularity(perm_func) --> SubModularity()
     @fact evaluate(perm_func, [1, 2, 3])[1] --> roughly(6, Tol)
 
-    F₁ = card([3.0, 2, 1], S)
+    F₁ = card([3.0, 5, 6], S)
     @fact modularity(F₁) --> SubModularity()
     @fact evaluate(F₁, [1, 3]) --> roughly(5, Tol)
   end
