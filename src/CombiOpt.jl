@@ -52,6 +52,7 @@ include("models.jl")
 
 # operators
 include("operators/affine_projection.jl")
+include("operators/extreme_point.jl")
 include("operators/lovasz_extension_abs.jl")
 include("operators/lovasz_extension.jl")
 include("operators/gradient.jl")
