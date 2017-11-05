@@ -52,7 +52,7 @@ function show(io::IO, p::AssocPoly)
   print(io, """AssocPoly with
     head: $(p.head)
     baseset: $(p.V)
-    associated to $(p.f)""")
+    associated to $(p.F)""")
 end
 
 # A set constraint, for example, in(x, p), will be displayed as:

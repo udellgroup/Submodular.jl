@@ -15,19 +15,8 @@ function card_inc_fix(F::CardBasedAtom,
   n = length(w₀)
   g = zeros(n)
   for i = 1:n
-    g[i] = evaluate(F, collect(1:i))
+    g[i] = evaluate(F, collect(1:i))[1]
   end
-
-	# if(divergence=="euclidean")
-	# 	f_obj(x,y) = norm(x-y)^2
-	# end
-	#
-	# function f_submod(k)
-	# 	if(k==0) return 0
-	# 	else
-	# 		return g[k]  # the submodular function
-	# 	end
-	# end
 
 	sorted_indices = sortperm(w₀, rev=true)
 	w = w₀[sorted_indices]
@@ -69,3 +58,5 @@ function card_inc_fix(F::CardBasedAtom,
 	end
 	return temp
 end
+
+card_inc_fix(p::AssocPoly, w::AbstractArray, divergence::String = "euclidean") = card_inc_fix(p.F, w, divergence)

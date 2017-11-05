@@ -5,6 +5,6 @@
 
 export prox
 
-prox(p::AssocPoly, w::AbstractArray) = minimum_norm_point(p, w)
+prox(p::AssocPoly, w::AbstractArray, Tol::Float64 = 1e-3) = minimum_norm_point(p, w, Tol)
 
-prox(C::SetConstraint{AssocPoly}, w::AbstractArray) = minimum_norm_point(p, w)
+prox(C::SetConstraint{AssocPoly}, w::AbstractArray, Tol::Float64 = 1e-3) = minimum_norm_point(p, w, Tol)

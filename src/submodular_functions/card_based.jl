@@ -130,7 +130,7 @@ function in(w::AbstractArray, p::SubmodPoly{CardBasedAtom})
   ind = []
   y = zeros(n + 1)
   for i = 1:length(w)
-    y[i + 1] = evaluate(p.f, S[push!(ind, ordering[i])])[1]
+    y[i + 1] = evaluate(p.F, S[push!(ind, ordering[i])])[1]
     h += - y[i] - w[i] + y[i + 1]
     if h < 0
       checker = false
