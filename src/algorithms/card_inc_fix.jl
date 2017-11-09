@@ -20,9 +20,9 @@ function card_inc_fix(F::CardBasedAtom,
 
 	sorted_indices = sortperm(w₀, rev=true)
 	w = w₀[sorted_indices]
-	if(w[1]<=0 && divergence!="euclidean")
+	if(w[1] <= 0 && divergence != "euclidean")
    	error("The input is out of range for itakura-saito, logistic, entropy")
-	elseif(w[1]>=1&&divergence=="logistic")
+	elseif(w[1] >= 1&&divergence == "logistic")
   	error("The input is out of range for logistic")
 	end
 

@@ -28,7 +28,6 @@ include("types.jl")
 include("modularity.jl")
 include("problems.jl")
 include("variables.jl")
-include("solutions.jl")
 
 # combinatorial sets
 include("combinatorial_sets/combinatorial_sets.jl")
@@ -47,9 +46,6 @@ include("submodular_functions/cut.jl")
 include("submodular_functions/rank_of_graph_matroid.jl")
 include("submodular_functions/modular.jl")
 
-# models
-include("models.jl")
-
 # operators
 include("operators/affine_projection.jl")
 include("operators/extreme_point.jl")
@@ -59,17 +55,24 @@ include("operators/gradient.jl")
 include("operators/greedy.jl")
 include("operators/solve_dual.jl")
 
+# prox
+include("prox/prox_convex.jl")
+include("prox/prox_poly.jl")
+
+# models
+include("models.jl")
+
+# solutions
+include("solutions.jl")
+
 # algorithms
 include("algorithms/card_inc_fix.jl")
 include("algorithms/chambolle_pock.jl")
 include("algorithms/cutting_plane.jl")
+include("algorithms/frank_wolfe_away.jl")
 include("algorithms/lp_over_assocpoly.jl")
-include("algorithms/mininum_norm_point.jl")
-include("algorithms/proximal_level_bundle.jl")
-
-# prox
-include("prox/prox_convex.jl")
-include("prox/prox_poly.jl")
+include("algorithms/mininum_norm_point_fujishige.jl")
+# include("algorithms/proximal_level_bundle.jl")
 
 # utilities
 include("utilities/show.jl")

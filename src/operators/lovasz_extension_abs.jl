@@ -97,9 +97,3 @@ function get_v(F::LovaszExtAbsAtom)
   variable = []
   return push!(variable, F.variable)
 end
-
-# Convex function + Lovasz extension
-type ConvexLovaszAbs <: SCOPEModel
-  convex_part::Problem
-  lovaszabs::LovaszExtAbsAtom
-end

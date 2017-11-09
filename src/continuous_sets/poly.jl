@@ -78,6 +78,10 @@ function get_sv(p::AssocPoly)
   return get_sv(p.F)
 end
 
+function get_cv(p::AssocPoly)
+  return Variable[]
+end
+
 # check if w is in p
 
 function in(w::AbstractArray, p::AssocPoly, Tol::Float64 = 1e-3)

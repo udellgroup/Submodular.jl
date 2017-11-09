@@ -8,8 +8,7 @@ export show
 # modularity: ConstModularity()
 function show(io::IO, x::SetVariable)
   print(io, """SetVariable of
-    baseset: $(x.baseset)
-    sign: $(x.sign)""")
+    baseset: $(x.baseset)""")
   if x.elements != nothing
     print(io, "\nelements: $(x.elements)")
   end

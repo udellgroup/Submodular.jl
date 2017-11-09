@@ -1,9 +1,51 @@
 #############################################################################
 # models.jl
 # Handles the models of problems
+#
+# a PrimalModel has the form:
+#   minimize g(x) + f(x)
+#   s.t.     x \in s, s in ContiSet
+#            x \in C, C is convex,
+# where g(x) is a convex function, and f(x) is the Lovasz extension of a submodular function
+#
+# a DualModel has the form:
+#  minimize g(x)
+#  s.t.      x \in P, P is a polyhedron associated with a submodular function
+##            x \in C, C is convex
 #############################################################################
 
-export CombiModel, LPoverAssocPoly, ConvexLovasz, AssocPolyConstrained
+export PrimalModel
+export ConvexProblem, ConvexLovasz, ConvexLovaszAbs
+export DualModel
+export AssocPolyConstrained, LPoverAssocPoly
+export get_model
+
+### models of the primal problems
+abstract type PrimalModel <: SCOPEModel end
+
+### convex problem
+type ConvexProblem <: PrimalModel end
+### Convex function + Lovasz extension
+type ConvexLovasz <: PrimalModel
+  convex_part::Problem
+  lovasz::LovaszExtAtom
+end
+### Convex function + Lovasz extension on absolute values
+type ConvexLovaszAbs <: PrimalModel
+  convex_part::Problem
+  lovaszabs::LovaszExtAbsAtom
+end
+
+### models of the dual problems
+abstract type DualModel <: SCOPEModel end
+
+### convex optimization over a polyhedron associated with a submodular function
+type AssocPolyConstrained <: DualModel
+  variable::Variable
+  poly::AssocPoly
+end
+### linear programming over associated polyhedra
+type LPoverAssocPoly <: DualModel end
 
 function get_model(objective::AbstractExpr, constraints::AbstractArray=Constraint[])
   objective_cv = get_cv(objective)
@@ -15,10 +57,10 @@ function get_model(objective::AbstractExpr, constraints::AbstractArray=Constrain
     constraints_sv = vcat(constraints_sv, get_sv(constraints[i].lhs), get_sv(constraints[i].rhs))
   end
   if objective.head == :+
-    lonum = 0
-    loind = 1
-    lanum = 0
-    laind = 1
+    lonum = 0                                         # number of lovasz extensions
+    loind = 1                                         # index of lovasz extensions
+    lanum = 0                                         # number of lovasz + abs
+    laind = 1                                         # index of lovasz + abs
     childnum = length(objective.children)
     for i = 1:childnum
       if objective.children[i].head == :lovasz
@@ -87,25 +129,18 @@ function get_model(objective::AbstractExpr, constraints::AbstractArray=Constrain
       return ConvexProblem()
     end
   elseif length(constraints) == 1
-    if isa(constraints[1], SetConstraint)
+    if isa(constraints[1], SetConstraint)             # set-constrained optimization problems
       if isa(constraints[1].rhs, AssocPoly) && length(objective_sv) == 0 && length(objective_cv) == 1 && objective_cv[1].id_hash == constraints_cv[1].id_hash
         if vexity(objective) == AffineVexity()
           return LPoverAssocPoly()
-        else
-          return AssocPolyConstrained()
+        elseif vexity(objective) == ConvexVexity()
+          return AssocPolyConstrained(objective_cv[1], constraints[1].rhs)
         end
       end
     else
       return ConvexProblem()
     end
   else
-    return ConvexProblem()
+    return ConvexProblem()                            # fail-safe option, TODO: add other one
   end
 end
-
-### convex problem
-type ConvexProblem <: SCOPEModel end
-### convex optimization over a polyhedron associated with a submodular function
-type AssocPolyConstrained <: SCOPEModel end
-### linear programming over associated polyhedra
-type LPoverAssocPoly <: SCOPEModel end

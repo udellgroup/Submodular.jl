@@ -50,7 +50,7 @@ function get_cv(x::AbstractExpr)
       push!(cv, x)
       return cv
     else
-      return []
+      return Variable[]
     end
   else
     cv = Variable[]
@@ -65,7 +65,7 @@ function get_cv(x::AbstractExpr)
 end
 
 function get_cv(x::Val)
-  return []
+  return Variable[]
 end
 
 ### Output the set variables of an expression
@@ -76,7 +76,7 @@ function get_sv(x::AbstractExpr)
       push!(sv, x)
       return sv
     else
-      return []
+      return SetVariable[]
     end
   else
     sv = SetVariable[]

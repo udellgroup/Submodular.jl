@@ -6,10 +6,10 @@
 
 export minimum_norm_point
 
-function minimum_norm_point(p::AssocPoly, w::AbstractArray, Tol::Float64 = 1e-3)
+function minimum_norm_point(p::AssocPoly, w::AbstractArray, Tol::Float64 = 1e-3; algo::String = "cif")
   # step 1 initialization
   if isa(p, BasePoly)
-    if isa(p.F, CardBasedAtom)
+    if isa(p.F, CardBasedAtom) && algo == "cif"
       return  card_inc_fix(p.F, w)
     end
   end

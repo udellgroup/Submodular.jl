@@ -28,4 +28,17 @@ facts("Algorithms") do
     @fact sum(euclidean_proj) - g[n] --> roughly(0, Tol^3)
   end
 
+  context("frank-wolfe with away steps") do
+    n = 4
+    x = Variable(n)
+    g = norm(x - [3, 2, 5, 1])
+    S = SetVariable(n)
+    F = card(S)
+    p(z) = -0.5*z^2 + n*z + 0.5 * z
+    perm_func = compose(p, F)
+    P = BasePoly(perm_func)
+    prob = SCOPEminimize(g, x in P)
+    @fact frank_wolfe_away(prob, verbose = false) --> roughly([3, 2, 4, 1], Tol)
+  end
+
 end

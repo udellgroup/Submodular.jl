@@ -81,7 +81,7 @@ end
 
 
 function sign(F::ModularAtom)
-  return sign(F.children[1]) * sign(F.children[2])
+  return sign(F.param)
 end
 
 function monotonicity(F::ModularAtom)

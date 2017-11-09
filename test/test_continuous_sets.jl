@@ -15,7 +15,7 @@ facts("Continuous Sets") do
     @fact fenchel(p, w) --> roughly([2, 4, 1, 3], Tol)
   end
 
-  context("associated polyhedra and the minimum-norm-point algorithm") do
+  context("associated polyhedra and the Fujishige-minimum-norm-point algorithm") do
     S = SetVariable(4)
     p(z) = -0.5*z^2 + 4*z + 0.5 * z
     perm_func = compose(p, card(S))

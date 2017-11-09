@@ -77,7 +77,7 @@ end
 
 function get_cv(F::LovaszExtAtom)
   variable = []
-  return push!(variable, x.variable)
+  return push!(variable, F.variable)
 end
 
 function get_sv(F::LovaszExtAtom)
@@ -87,10 +87,4 @@ end
 function get_v(F::LovaszExtAtom)
   variable = []
   return push!(variable, F.variable)
-end
-
-# Convex function + Lovasz extension
-type ConvexLovasz <: SCOPEModel
-  convex_part::Problem
-  lovasz::LovaszExtAtom
 end

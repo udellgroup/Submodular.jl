@@ -1,48 +1,48 @@
 #############################################################################
 # frank_wolfe_away.jl
-# Use the frank wolfe algorithm with away steps to solve convex optimization of the form:
+# Use the frank wolfe algorithm with away steps to solve problems of the DualModel:
 #
 # minimize g(x) st x ∈ P(F),
 #
 # where g(x) is a smooth convex function
 # and P(F) is a polyhedron associated with a submodular function
 #
-# todo:
+# TODO:
 # * improve data structure for ActiveVertices: would be faster to insert, delete, search with a heap
 # * check maximization and minimization both work
 #############################################################################
 
-import JuMP: DiffableFunction
+# import JuMP: DiffableFunction
+import Base: deleteat!
 export frank_wolfe_away
 
-function frank_wolfe_away(p::CombiProblem{DiffableFunction},
-  maxiters=100,
-  verbose=true)
-
-  # check only constraint is one combinatorial constraint
-  @assert length(p.convex_constraints==0) && length(p.combi_constraints==1)
+function frank_wolfe_away(p::SCOPEProblem{AssocPolyConstrained};
+                          maxiters::Int64 = 100,
+													epsilon::Float64 = 1e-3,
+                          verbose::Bool = true)
 
   # initialize
-  combiset = p.combi_constraints[1]
-  n = combiset.dim
-  x = zeros(n)
+  poly = p.model.poly
+  n = length(poly.V)
+  x = greedy(poly.F, collect(1:n))                  # the innitial solution
+	g = grad(p.objective)
   V = ActiveVertices(length(x)) # maintain atomic representation in terms of vertices of polytope
 	if verbose
 		@printf("%10s%12s%10s\n", "iter", "obj", "\# active")
 		@printf("%10d%12.4e%10d\n", 0, evaluate(p.objective, x), length(V.α))
 	end
 
-  for k=1:maxiters
+  for k = 1:maxiters
 
-    g = grad(p.objective, x)
+    gradient = evaluate(g, x)
     # compute fw step
-    h = fenchel(combiset, g)
+    h = fenchel(poly, gradient)
 		d_fw = h - x
-		fw_dec = dot(-g, d_fw) # the frank wolfe decrement
+		fw_dec = dot(-gradient, d_fw) # the frank wolfe decrement
 		# compute away step
-		i, v, alpha = argmax_inner_product(-g, V)
+		i, v, alpha = argmax_inner_product(-gradient, V)
 		d_away = v - x
-		away_dec = dot(-g, d_away) # the away step decrement
+		away_dec = dot(-gradient, d_away) # the away step decrement
 
 		# check stopping condition
 		if fw_dec < epsilon break end
@@ -58,7 +58,7 @@ function frank_wolfe_away(p::CombiProblem{DiffableFunction},
 
     # choose stepsize gamma via backtracking linesearch with parameters (.1, .5)
 		f(gamma) = evaluate(p.objective, x + gamma*d)
-		df(gamma) = dot(grad(p.objective, x + gamma*d), d)
+		df(gamma) = dot(evaluate(g, x + gamma*d), d)
 		gamma = gamma_max
 		while f(gamma) > f(0) + .1*df(0)*gamma
 			gamma *= .5
@@ -76,9 +76,9 @@ function frank_wolfe_away(p::CombiProblem{DiffableFunction},
 		else # FW step
 			if verbose println("forward! $((gamma_max - gamma)/gamma_max)") end
 			if gamma == 1 # we're at a vertex!
-				V = ActiveVertices([s], [1])
+				V = ActiveVertices([h], [1])
 			else
-				increase_weight!(V, s, gamma)
+				increase_weight!(V, h, gamma)
 			end
 		end
 		if verbose && k%1==0
@@ -90,43 +90,47 @@ function frank_wolfe_away(p::CombiProblem{DiffableFunction},
 end # function
 
 type ActiveVertices
-	S::Array{Vector{Int},1}
+	S::Array{Vector{Float64},1}
 	α::Array{Float64,1}
 end
-ActiveVertices(n::Int) = ActiveVertices([zeros(Int, n)], [1])
+ActiveVertices(n::Int) = ActiveVertices([zeros(n)], [1])
 
-function add!(V::ActiveVertices, α, v)
-		push!(V.S, v)
-		push!(V.α, α)
-		z = sum(V.α) # normalization constant
-		scale!(V.α, 1/z)
-		return V
-end
-function deleteat!(V::ActiveVertices, i)
-		deleteat!(V.S, i)
-		deleteat!(V.α, i)
-		z = sum(V.α) # normalization constant
-		scale!(V.α, 1/z)
-		return V
-end
-function decrease_weight!(V::ActiveVertices, i, gamma)
-		scale!(V.α, 1+gamma)
-		V.α[i] -= gamma
-		return V
-end
-function increase_weight!(V::ActiveVertices, v, gamma)
-		scale!(V.α, 1-gamma)
-		idxs = find(a-> a==v, V.S)
-		@assert length(idxs) <= 1 # there should never be replicates of the same vertex
-		if length(idxs) > 0 # v is already in the set of active vertices
-			V.α[idxs[1]] += gamma
-		else # v is not yet in the set of active vertices
-			push!(V.S, v)
-			push!(V.α, gamma)
-		end
-		return V
-end
 function argmax_inner_product(g::Vector, V::ActiveVertices)
 	i = indmax([dot(g,s) for s in V.S])
 	return i, V.S[i], V.α[i]
+end
+
+function add!(V::ActiveVertices, α, v)
+	push!(V.S, v)
+	push!(V.α, α)
+	z = sum(V.α) # normalization constant
+	scale!(V.α, 1/z)
+	return V
+end
+
+function deleteat!(V::ActiveVertices, i)
+	deleteat!(V.S, i)
+	deleteat!(V.α, i)
+	z = sum(V.α) # normalization constant
+	scale!(V.α, 1/z)
+	return V
+end
+
+function decrease_weight!(V::ActiveVertices, i, gamma)
+	scale!(V.α, 1+gamma)
+	V.α[i] -= gamma
+	return V
+end
+
+function increase_weight!(V::ActiveVertices, v, gamma)
+	scale!(V.α, 1-gamma)
+	idxs = find(a-> a==v, V.S)
+	@assert length(idxs) <= 1 # there should never be replicates of the same vertex
+	if length(idxs) > 0 # v is already in the set of active vertices
+		V.α[idxs[1]] += gamma
+	else # v is not yet in the set of active vertices
+		push!(V.S, v)
+		push!(V.α, gamma)
+	end
+	return V
 end
