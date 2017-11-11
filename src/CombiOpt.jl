@@ -13,7 +13,7 @@ import Convex: conic_problem
 
 import ForwardDiff: gradient
 
-import LightGraphs: AbstractGraph, AbstractEdge, nv, ne, edges, Edge, weights, src, dst, induced_subgraph, connected_components, modularity
+import LightGraphs: AbstractGraph, AbstractEdge, Graph, nv, ne, edges, Edge, add_edge!, weights, src, dst, induced_subgraph, connected_components, modularity
 
 import MathProgBase: ConicModel, loadproblem!, optimize!, numvar, AbstractMathProgSolver
 
@@ -26,8 +26,10 @@ export solve!
 # data structures
 include("types.jl")
 include("modularity.jl")
+include("graphs.jl")
 include("problems.jl")
 include("variables.jl")
+
 
 # combinatorial sets
 include("combinatorial_sets/combinatorial_sets.jl")

@@ -60,5 +60,8 @@ function monotonicity(x::GradientAtom)
 end
 
 function evaluate(x::GradientAtom)
-  return gradient(x.func, x.variable.value)
+  var = copy(x.variable.value)
+  val = gradient(x.func, var)
+  x.variable.value = var
+  return val
 end

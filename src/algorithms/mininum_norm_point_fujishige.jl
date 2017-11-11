@@ -6,13 +6,8 @@
 
 export minimum_norm_point
 
-function minimum_norm_point(p::AssocPoly, w::AbstractArray, Tol::Float64 = 1e-3; algo::String = "cif")
+function minimum_norm_point(p::AssocPoly, w::AbstractArray, Tol::Float64 = 1e-3)
   # step 1 initialization
-  if isa(p, BasePoly)
-    if isa(p.F, CardBasedAtom) && algo == "cif"
-      return  card_inc_fix(p.F, w)
-    end
-  end
   n = length(w)
   @assert length(p.V) == n
   V = sort(p.V)         # the sorted base set

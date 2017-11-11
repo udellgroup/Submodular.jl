@@ -22,7 +22,7 @@ facts("Submodular Functions") do
 
   context("cut atom") do
     S = SetVariable(3)
-    G = Graph(3)
+    G = WeightedGraph(3)
     add_edge!(G, 1, 3)
     F = cut(G, S)
     @fact modularity(F) --> SubModularity()
@@ -38,7 +38,7 @@ facts("Submodular Functions") do
 
   context("rank of graph matroid atom") do
     S = SetVariable(2)
-    G = Graph(3)
+    G = WeightedGraph(3)
     add_edge!(G, 1, 3)
     add_edge!(G, 2, 3)
     F = rank_of_graph_matroid(G, S)

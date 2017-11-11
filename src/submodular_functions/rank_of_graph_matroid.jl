@@ -10,12 +10,12 @@ export sign, monotonicity, modularity, evaluate
 type RankOfGraphicMatroidAtom <: SubmodFunc
   head::Symbol
   id_hash::UInt64
-  children::Tuple{AbstractGraph, CombiSet}
+  children::Tuple{WeightedGraph, CombiSet}
   size::Tuple{Int, Int}
-  graph::AbstractGraph
+  graph::WeightedGraph
   setvariables::Array{CombiSet}
 
-  function RankOfGraphicMatroidAtom(g::AbstractGraph, S::CombiSet)
+  function RankOfGraphicMatroidAtom(g::WeightedGraph, S::CombiSet)
     if ne(g) != S.cardinality
       error("Cannot define a rank function of a graphic matroid when the number of edges in the graph is different from the size of the set variable.")
     else
@@ -26,7 +26,7 @@ type RankOfGraphicMatroidAtom <: SubmodFunc
   end
 end
 
-rank_of_graph_matroid(g::AbstractGraph, S::CombiSet) = RankOfGraphicMatroidAtom(g, S)
+rank_of_graph_matroid(g::WeightedGraph, S::CombiSet) = RankOfGraphicMatroidAtom(g, S)
 
 function sign(F::RankOfGraphicMatroidAtom)
   return Positive()

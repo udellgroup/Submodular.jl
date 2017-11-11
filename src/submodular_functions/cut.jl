@@ -10,12 +10,12 @@ export sign, monotonicity, modularity, evaluate
 type CutAtom <: SubmodFunc
   head::Symbol
   id_hash::UInt64
-  children::Tuple{AbstractGraph, CombiSet}
+  children::Tuple{WeightedGraph, CombiSet}
   size::Tuple{Int, Int}
-  graph::AbstractGraph
+  graph::WeightedGraph
   setvariables::Array{CombiSet}
 
-  function CutAtom(g::AbstractGraph, S::CombiSet)
+  function CutAtom(g::WeightedGraph, S::CombiSet)
     if nv(g) != S.cardinality
       error("Cannot define a cut function when the number of vertices in the graph is different from the size of the set variable.")
     else
@@ -26,10 +26,10 @@ type CutAtom <: SubmodFunc
   end
 end
 
-cut(g::AbstractGraph, S::CombiSet) = CutAtom(g, S)
+cut(g::WeightedGraph, S::CombiSet) = CutAtom(g, S)
 
 function sign(F::CutAtom)
-  return Positive()
+  return NoSign()
 end
 
 function monotonicity(F::CutAtom)
@@ -37,7 +37,7 @@ function monotonicity(F::CutAtom)
 end
 
 function modularity(F::CutAtom)
-  w = weights(F.children[1])
+  w = values(weights(F.children[1]))
   if all(x -> x>=0, w)
     return SubModularity()
   elseif all(x -> x <=0, w)
@@ -56,7 +56,7 @@ function evaluate(F::CutAtom)
   for e in edges(F.children[1])
     u, v = src(e), dst(e)
     if in(u, set) + in(v, set) == 1
-      cut += w[u, v]
+      cut += w[(u, v)]
     end
   end
   return cut
