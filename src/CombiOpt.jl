@@ -45,6 +45,7 @@ include("continuous_sets/poly.jl")
 # submodular functions
 include("submodular_functions/card_based.jl")
 include("submodular_functions/cut.jl")
+include("submodular_functions/log_determinant.jl")
 include("submodular_functions/rank_of_graph_matroid.jl")
 include("submodular_functions/modular.jl")
 

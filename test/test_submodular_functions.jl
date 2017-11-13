@@ -20,13 +20,21 @@ facts("Submodular Functions") do
     @fact evaluate(F₁, [1, 3]) --> roughly(5, Tol)
   end
 
-  context("cut atom") do
+  context("cut atom and WeightedGraph") do
     S = SetVariable(3)
     G = WeightedGraph(3)
     add_edge!(G, 1, 3)
     F = cut(G, S)
     @fact modularity(F) --> SubModularity()
     @fact evaluate(F, [1, 2]) --> roughly(1, Tol)
+  end
+
+  context("log determinant") do
+    S = SetVariable(3)
+    M = [1 0 0; 0 2 0; 0 0 3]
+    F = logdet(M, S)
+    @fact modularity(F) --> SubModularity()
+    @fact evaluate(F, [1, 3]) --> roughly(log(3), Tol)
   end
 
   context("modular atom") do
@@ -36,7 +44,7 @@ facts("Submodular Functions") do
     @fact evaluate(F, [1, 3]) --> roughly(4, Tol)
   end
 
-  context("rank of graph matroid atom") do
+  context("rank of graph matroid atom and WeightedGraph") do
     S = SetVariable(2)
     G = WeightedGraph(3)
     add_edge!(G, 1, 3)
