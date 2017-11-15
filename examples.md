@@ -27,6 +27,38 @@ and polyhedral or SDP-based.
 
 8. Lambdamax
 
+## Sample code to generate loss functions
+```
+    n =
+    m =  # probably choose m = 2n for now; choose m < n for non-unique solution
+    x♮ = randn(n)
+    A = randn(m,n)
+
+    ### regression losses
+    b = A*x♮ + .1*randn(m)
+
+    # least squares loss
+    fquad(x) = norm(A*x - b)^2
+
+    # huber loss
+    fhuber(x) = sum(huber.(A*x - b))
+
+    # l1 loss
+    fquad(x) = norm(A*x - b, 1)
+
+    ### classification losses
+    boolb = sign(A*x♮ + .1*randn(m))
+
+    # logistic loss
+    f(x) = sum(log.(1+exp.(-boolb.*A*x)))
+
+    # hinge loss
+    f(x) = sum(max.(1-boolb.*A*x, 0))
+
+    # hinge loss + l2
+    f(x) = sum(max.(1-boolb.*A*x, 0)) + norm(x)^2
+```
+
 # Submodular functions
 
 1. Cardinality based functions
