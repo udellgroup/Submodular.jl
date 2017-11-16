@@ -7,7 +7,7 @@
 export submod
 export sign, monotonicity, modularity, evaluate
 
-type SubmodAtom <: SubmodFunc
+type CustomizedSubmodAtom <: SubmodFunc
   head::Symbol
   id_hash::UInt64
   children::Tuple{Function, SetVariable}
@@ -15,28 +15,28 @@ type SubmodAtom <: SubmodFunc
   func::Function
   setvariables::Array{CombiSet}
 
-  function SubmodAtom(F::Function, S::SetVariable)
-    warn("Please make sure the function is submodular, the function returns 0 at the empty set, and the cardinality of the base set is equal to that of the set variable.")
+  function CustomizedSubmodAtom(F::Function, S::SetVariable)
+    info("Please make sure the function is submodular, the function returns 0 at the empty set, and the cardinality of the base set is equal to that of the set variable.")
     children = (F, S)
     setvariables = get_sv(S)
-    return new(:custoized_submod, hash(children), children, (1, 1), F, setvariables)
+    return new(:customized_submod, hash(children), children, (1, 1), F, setvariables)
   end
 end
 
-submod(F::Function, S::SetVariable) = SubmodAtom(F, S)
+submod(F::Function, S::SetVariable) = CustomizedSubmodAtom(F, S)
 
-function sign(F::SubmodAtom)
+function sign(F::CustomizedSubmodAtom)
   return NoSign()
 end
 
-function monotonicity(F::SubmodAtom)
+function monotonicity(F::CustomizedSubmodAtom)
   return NoMonotinicity()
 end
 
-function modularity(F::SubmodAtom)
+function modularity(F::CustomizedSubmodAtom)
   return SubModularity()
 end
 
-function evaluate(F::SubmodAtom)
+function evaluate(F::CustomizedSubmodAtom)
   return F.func(F.children[2].elements)
 end

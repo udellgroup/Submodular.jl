@@ -38,29 +38,31 @@ function frank_wolfe_away(p::SCOPEProblem{AssocPolyConstrained};
     # compute fw step
     h = fenchel(poly, gradient)
 		d_fw = h - x
-		fw_dec = dot(-gradient, d_fw) # the frank wolfe decrement
+		fw_dec = dot(-gradient, d_fw)     # the frank wolfe decrement
 		# compute away step
-		i, v, alpha = argmax_inner_product(-gradient, V)
-		d_away = v - x
+		i, v, alpha = argmax_inner_product(gradient, V)
+		d_away = x - v
 		away_dec = dot(-gradient, d_away) # the away step decrement
 
 		# check stopping condition
 		if fw_dec < epsilon break end
 
     # choose away step or fw step
-		if fw_dec > away_dec
+		if fw_dec > away_dec              # choose fw step
 			d = d_fw
 			gamma_max = 1
-		else
+		else                              # choose away step
 			d = d_away
 			gamma_max = alpha / (1-alpha)
 		end
 
     # choose stepsize gamma via backtracking linesearch with parameters (.1, .5)
 		f(gamma) = evaluate(p.objective, x + gamma*d)
-		df(gamma) = dot(evaluate(g, x + gamma*d), d)
+		# df(gamma) = dot(evaluate(g, x + gamma*d), d)
+		df = dot(evaluate(g, x), d)
+
 		gamma = gamma_max
-		while f(gamma) > f(0) + .1*df(0)*gamma
+		while f(gamma) > f(0) + .1 * df * gamma
 			gamma *= .5
 		end
 
