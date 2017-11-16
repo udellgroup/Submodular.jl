@@ -20,6 +20,25 @@ facts("Submodular Functions") do
     @fact evaluate(F₁, [1, 3]) --> roughly(5, Tol)
   end
 
+  context("customized submodular function atom") do
+    function func(S::AbstractArray)
+      if S == []
+        return 0
+      elseif S == [1]
+        return 3
+      elseif S == [2]
+        return 2
+      elseif S == [1, 2]
+        return 4
+      end
+    end
+    S = SetVariable(2)
+    F = submod(func, S)
+    @fact modularity(F) --> SubModularity()
+    @fact evaluate(F, [1]) --> roughly(3, Tol)
+    @fact evaluate(F, [1, 2]) --> roughly(4, Tol)
+  end
+
   context("cut atom and WeightedGraph") do
     S = SetVariable(3)
     G = WeightedGraph(3)

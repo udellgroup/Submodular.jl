@@ -49,6 +49,9 @@ end
 
 function evaluate(F::LogDeterminantAtom)
   set = get_elements(F.children[2])
+  if length(set) == 0
+    return 0
+  end
   matrix = F.matrix[]
   return logdet(F.matrix[set, set])
 end

@@ -48,6 +48,7 @@ include("submodular_functions/cut.jl")
 include("submodular_functions/log_determinant.jl")
 include("submodular_functions/rank_of_graph_matroid.jl")
 include("submodular_functions/modular.jl")
+include("submodular_functions/customized_submod.jl")
 
 # operators
 include("operators/affine_projection.jl")
