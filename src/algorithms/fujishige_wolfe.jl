@@ -1,12 +1,12 @@
 #############################################################################
-# minimum_norm_point.jl
-# Implements the the minimum_norm_point algorithm, to find the point with
+# fujishige_wolfe.jl
+# Implements the the fujishige_wolfe algorithm, to find the point with
 # minimum norm in the base polyhedron.
 #############################################################################
 
-export minimum_norm_point
+export fujishige_wolfe
 
-function minimum_norm_point(p::AssocPoly, w::AbstractArray, Tol::Float64 = 1e-3)
+function fujishige_wolfe(p::AssocPoly, w::AbstractArray, Tol::Float64 = 1e-3)
   # step 1 initialization
   n = length(w)
   @assert length(p.V) == n
@@ -23,25 +23,25 @@ function minimum_norm_point(p::AssocPoly, w::AbstractArray, Tol::Float64 = 1e-3)
   major_cycle(p, w, x, S, Tol)
 end
 
-function minimum_norm_point(p::PosPoly, w::AbstractArray, Tol::Float64 = 1e-3)
+function fujishige_wolfe(p::PosPoly, w::AbstractArray, Tol::Float64 = 1e-3)
   w₁ = copy(w)
   if any(w₁ .< 0)
     negind = find(w₁ .< 0)
     w₁[negind] = zeros(length(negind))
   end
   p₁ = SubmodPoly(p.F)
-  minimum_norm_point(p₁, w₁, Tol)
+  fujishige_wolfe(p₁, w₁, Tol)
 end
 
-function minimum_norm_point(p::SymPoly, w::AbstractArray, Tol::Float64 = 1e-3)
+function fujishige_wolfe(p::SymPoly, w::AbstractArray, Tol::Float64 = 1e-3)
   w₁ = sign.(w) .* w
   p₁ = SubmodPoly(p.F)
-  x = minimum_norm_point(p₁, w₁, Tol)
+  x = fujishige_wolfe(p₁, w₁, Tol)
   return sign.(w) .* x
 end
 
 # minimum-norm-point with warmstart
-function minimum_norm_point(p::AssocPoly, w::AbstractArray, x₀::AbstractArray, Tol::Float64 = 1e-3)
+function fujishige_wolfe(p::AssocPoly, w::AbstractArray, x₀::AbstractArray, Tol::Float64 = 1e-3)
   n = length(w)
   @assert length(p.V) == n
   S = zeros(n, 1)
@@ -49,20 +49,20 @@ function minimum_norm_point(p::AssocPoly, w::AbstractArray, x₀::AbstractArray,
   major_cycle(p, w, x₀, S, Tol)
 end
 
-function minimum_norm_point(p::PosPoly, w::AbstractArray, x₀::AbstractArray, Tol::Float64 = 1e-3)
+function fujishige_wolfe(p::PosPoly, w::AbstractArray, x₀::AbstractArray, Tol::Float64 = 1e-3)
   w₁ = copy(w)
   if any(w₁ .< 0)
     negind = find(w₁ .< 0)
     w₁[negind] = zeros(length(negind))
   end
   p₁ = SubmodPoly(p.F)
-  minimum_norm_point(p₁, w₁, x₀, Tol)
+  fujishige_wolfe(p₁, w₁, x₀, Tol)
 end
 
-function minimum_norm_point(p::SymPoly, w::AbstractArray, x₀::AbstractArray, Tol::Float64 = 1e-3)
+function fujishige_wolfe(p::SymPoly, w::AbstractArray, x₀::AbstractArray, Tol::Float64 = 1e-3)
   w₁ = sign.(w) .* w
   p₁ = SubmodPoly(p.F)
-  x = minimum_norm_point(p₁, w₁, x₀, Tol)
+  x = fujishige_wolfe(p₁, w₁, x₀, Tol)
   return sign.(w) .* x
 end
 
@@ -156,7 +156,7 @@ function minimum_check(p::SubmodPoly, w::AbstractArray, x::AbstractArray, S::Abs
   end
 end
 
-function minimum_norm_point(f::SubmodFunc, w::AbstractArray, Tol::Float64 = 1e-3)
+function fujishige_wolfe(f::SubmodFunc, w::AbstractArray, Tol::Float64 = 1e-3)
   p = BasePoly(f)
-  return minimum_norm_point(p, w, Tol)
+  return fujishige_wolfe(p, w, Tol)
 end

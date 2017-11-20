@@ -1,6 +1,6 @@
 #############################################################################
 # cutting_plane.jl
-# Use the cutting plane method to solve convex optimization of the form:
+# Implement the cutting plane method to solve convex optimization of the form:
 # minimize f(x) + g(x), where f(x) is the Lovasz extension of a submodular funciton.
 #############################################################################
 
@@ -11,7 +11,18 @@ using Mosek
 
 export cutting_plane
 
-function cutting_plane(p::Problem, f::LovaszExtAtom, abs_tol, max_iters, max_rep, lev_tol_def, lev_tol_up, lev_tol_low, shrink_point, λ, μ)
+function cutting_plane(p::Problem,
+                       f::LovaszExtAtom;
+                       s::AbstractMathProgSolver = MosekSolver(),
+                       abs_tol::Float64 = 1e-3,
+                       max_iters::Int = 100,
+                       max_rep::Int = 100,
+                       lev_tol_def::Float64 = 1e-3,
+                       lev_tol_up::Float64 = 1e-1,
+                       lev_tol_low::Float64 = 1e-7,
+                       shrink_point::Int = 20,
+                       λ::Float64 = 1.5,
+                       μ::Float64 = 0.7)
 
   lev_tol = lev_tol_def
 
@@ -113,7 +124,7 @@ function cutting_plane(p::Problem, f::LovaszExtAtom, abs_tol, max_iters, max_rep
         break
       end
       if rep == shrink_point                         # check if the solver is stuck
-        while pernum > max_rep && level_tol >= lev_tol_low  # println("reduce permnum!")
+        while pernum > max_rep && lev_tol >= lev_tol_low  # println("reduce permnum!")
           lev_tol *= μ
           (c, pernum, perm) = greedy_rand(f.func, optsol, lev_tol)
         end
@@ -124,7 +135,7 @@ function cutting_plane(p::Problem, f::LovaszExtAtom, abs_tol, max_iters, max_rep
         (b, pernum1, perm) = greedy_rand(f.func, var.value[:], lev_tol)
       end
       var.value[:] = optsol
-      while length(permset) >= pernum && level_tol <= lev_tol_up  # println("enlarge permnum!")
+      while length(permset) >= pernum && lev_tol <= lev_tol_up  # println("enlarge permnum!")
         lev_tol *= λ
         (a, pernum, perm) = greedy_rand(f.func, optsol, lev_tol)
       end
@@ -191,10 +202,21 @@ function cutting_plane(p::Problem, f::LovaszExtAtom, abs_tol, max_iters, max_rep
     end
     iters += 1
   end
-  return optsol
+  return optsol, upper, q, gap
 end
 
-function cutting_plane(p::Problem, f::LovaszExtAbsAtom, abs_tol, max_iters, max_rep, lev_tol_def, lev_tol_up, lev_tol_low, shrink_point, λ, μ)
+function cutting_plane(p::Problem,
+                       f::LovaszExtAbsAtom;
+                       s::AbstractMathProgSolver = MosekSolver(),
+                       abs_tol::Float64 = 1e-3,
+                       max_iters::Int = 100,
+                       max_rep::Int = 100,
+                       lev_tol_def::Float64 = 1e-3,
+                       lev_tol_up::Float64 = 1e-1,
+                       lev_tol_low::Float64 = 1e-7,
+                       shrink_point::Int = 20,
+                       λ::Float64 = 1.5,
+                       μ::Float64 = 0.7)
 
   lev_tol = lev_tol_def
 
@@ -295,7 +317,7 @@ function cutting_plane(p::Problem, f::LovaszExtAbsAtom, abs_tol, max_iters, max_
         break
       end
       if rep == shrink_point                         # check if the solver is stuck
-        while pernum > max_rep && level_tol >= lev_tol_low  # println("reduce permnum!")
+        while pernum > max_rep && lev_tol >= lev_tol_low  # println("reduce permnum!")
           lev_tol *= μ
           (c, pernum, perm) = greedy_rand(f.func, abs.(optsol), lev_tol)
         end
@@ -306,7 +328,7 @@ function cutting_plane(p::Problem, f::LovaszExtAbsAtom, abs_tol, max_iters, max_
         (b, pernum1, perm) = greedy_rand(f.func, abs.(var.value[:]), lev_tol)
       end
       var.value[:] = optsol
-      while length(permset) >= pernum && level_tol <= lev_tol_up  # println("enlarge permnum!")
+      while length(permset) >= pernum && lev_tol <= lev_tol_up  # println("enlarge permnum!")
         lev_tol *= λ
         (a, pernum, perm) = greedy_rand(f.func, abs.(optsol), lev_tol)
       end
@@ -373,5 +395,5 @@ function cutting_plane(p::Problem, f::LovaszExtAbsAtom, abs_tol, max_iters, max_
     end
     iters += 1
   end
-  return optsol
+  return optsol, upper
 end

@@ -1,7 +1,7 @@
 #############################################################################
 # cut.jl
 # given a graph G = (V, E)
-# f(S) = \sum of the weights of the edges spanning across S and (V\S)
+# f(S) = \sum of the edge_weights of the edges spanning across S and (V\S)
 #############################################################################
 
 export cut
@@ -37,7 +37,7 @@ function monotonicity(F::CutAtom)
 end
 
 function modularity(F::CutAtom)
-  w = values(weights(F.children[1]))
+  w = values(edge_weights(F.children[1]))
   if all(x -> x>=0, w)
     return SubModularity()
   elseif all(x -> x <=0, w)
@@ -50,7 +50,7 @@ function modularity(F::CutAtom)
 end
 
 function evaluate(F::CutAtom)
-  w = weights(F.children[1])
+  w = edge_weights(F.children[1])
   cut = 0.0
   set = get_elements(F.children[2])
   for e in edges(F.children[1])

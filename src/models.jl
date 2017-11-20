@@ -91,6 +91,7 @@ function get_model(objective::AbstractExpr, constraints::AbstractArray=Constrain
           objective1 += objective.children[i]
         end
       end
+      # convex + Lovasz extension
       if vexity(objective1) == ConvexVexity() || vexity(objective1) == AffineVexity()
         q = Problem(:minimize, objective1, constraints)
         return ConvexLovasz(q, lovasz)
@@ -117,6 +118,7 @@ function get_model(objective::AbstractExpr, constraints::AbstractArray=Constrain
           objective1 += objective.children[i]
         end
       end
+      # convex + Lovasz extension on absolute values
       if vexity(objective1) == ConvexVexity() || vexity(objective1) == AffineVexity()
         q = Problem(:minimize, objective1, constraints)
         return ConvexLovaszAbs(q, lovasz)

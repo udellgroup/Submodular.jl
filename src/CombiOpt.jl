@@ -23,6 +23,8 @@ export +, -, *, .*, /, ./, abs
 export add_constraints!
 export solve!
 
+export conic_problem
+
 # data structures
 include("types.jl")
 include("modularity.jl")
@@ -52,12 +54,12 @@ include("submodular_functions/customized_submod.jl")
 
 # operators
 include("operators/affine_projection.jl")
+include("operators/dual_to_primal.jl")
 include("operators/extreme_point.jl")
 include("operators/lovasz_extension_abs.jl")
 include("operators/lovasz_extension.jl")
 include("operators/gradient.jl")
 include("operators/greedy.jl")
-include("operators/solve_dual.jl")
 
 # prox
 include("prox/prox_convex.jl")
@@ -74,8 +76,9 @@ include("algorithms/card_inc_fix.jl")
 include("algorithms/chambolle_pock.jl")
 include("algorithms/cutting_plane.jl")
 include("algorithms/frank_wolfe_away.jl")
+include("algorithms/fujishige_wolfe.jl")
 include("algorithms/lp_over_assocpoly.jl")
-include("algorithms/mininum_norm_point_fujishige.jl")
+include("algorithms/L_BFGS.jl")
 # include("algorithms/proximal_level_bundle.jl")
 
 # utilities

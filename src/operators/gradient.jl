@@ -24,7 +24,7 @@ type GradientAtom <: AbstractExpr
       error("Only able to calculate gradients of functions with variable's size being (n, 1).")
     end
     children = (x,)
-    f(z) = evaluate(x, z)
+    f(z) = evaluate(x, z)[1]
     return new(:grad, hash(children), children, var[1].size, var[1], f)
   end
 end
