@@ -24,11 +24,11 @@ function solve!(p::SCOPEProblem{ConvexLovasz};
                 lev_tol_low::Float64 = 1e-7,
                 shrink_point::Int = 20,
                 λ::Float64 = 1.5,
-                μ::Float64 = 0.7,              # linesearch shrink rate or
+                μ::Float64 = 0.9,              # linesearch shrink rate or
                 x₀::AbstractArray = zeros(length(get_v(p.objective)[1])),   # the starting point for L_BFGS
                 m::Int = length(get_v(p.objective)[1]),  # the number of kept iterations
-                c₁::Float64 = 0.5,             # linesearch parameter
-                c₂::Float64 = 0.1,             # linesearch parameter
+                c₁::Float64 = 0.7,             # linesearch parameter
+                c₂::Float64 = 0.9,             # linesearch parameter
                 epsilon::Float64 = 1e-3)       # the stopping criteria of the algorithm
 
   if solver == "cutting_plane"

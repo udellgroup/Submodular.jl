@@ -202,7 +202,7 @@ function cutting_plane(p::Problem,
     end
     iters += 1
   end
-  return optsol, upper, q, gap
+  return optsol
 end
 
 function cutting_plane(p::Problem,
@@ -395,5 +395,5 @@ function cutting_plane(p::Problem,
     end
     iters += 1
   end
-  return optsol, upper
+  return optsol
 end

@@ -31,9 +31,9 @@ function solvedualMosek!(p::Problem)
     end
   end
   dual_constr_cones = fill((:Zero, 1:size(A, 2)),1)
+  
   m = ConicModel(MosekSolver(MSK_IPAR_LOG = 0, MSK_DPAR_INTPNT_CO_TOL_REL_GAP = 1e-6))
   loadproblem!(m, vec(full(b)), -A', vec(full(c)), dual_constr_cones, dual_var_cones)
-
   optimize!(m)
 
   solution = try

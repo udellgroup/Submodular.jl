@@ -41,7 +41,7 @@ abstract type DualModel <: SCOPEModel end
 
 ### convex optimization over a polyhedron associated with a submodular function
 type AssocPolyConstrained <: DualModel
-  variable::Variable
+  prob::Problem
   poly::AssocPoly
 end
 ### linear programming over associated polyhedra
@@ -136,7 +136,7 @@ function get_model(objective::AbstractExpr, constraints::AbstractArray=Constrain
         if vexity(objective) == AffineVexity()
           return LPoverAssocPoly()
         elseif vexity(objective) == ConvexVexity()
-          return AssocPolyConstrained(objective_cv[1], constraints[1].rhs)
+          return AssocPolyConstrained(Problem(:minimize, objective), constraints[1].rhs)
         end
       end
     else

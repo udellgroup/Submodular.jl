@@ -25,7 +25,7 @@ function prox(p::AssocPoly, w::AbstractArray, Tol::Float64 = 1e-3; solver::Strin
     else
       error("The cutting plane method is not applicable to $(typeof(p)).")
     end
-    primal_solution, primal_optval = cutting_plane(q, f)
+    primal_solution = cutting_plane(q, f)
     return -primal_solution                           # the solution we get here is the negative
   else
     error("This method is not supported.")
