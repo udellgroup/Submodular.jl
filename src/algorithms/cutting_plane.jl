@@ -64,8 +64,6 @@ function cutting_plane(p::Problem,
   cos_num = 0.0
   gap = 0.0
 
-  lastt = Problem(q.head, q.objective, q.constraints)
-
   qq = Problem(q.head, q.objective, q.constraints)
 
   for i = 1:max_iters
@@ -83,8 +81,6 @@ function cutting_plane(p::Problem,
       # println("gapopt = $gap")
       break
     end
-
-    lastt = Problem(q.head, q.objective, q.constraints)
 
     inacct = t.value                             # the inaccurate value of t
     acct = maximum(evaluate.(constraints))       # the accurate value of t
@@ -258,10 +254,6 @@ function cutting_plane(p::Problem,
   cos_num = 0.0
   gap = 0.0
 
-  lastt = Problem(q.head, q.objective, q.constraints)
-
-  qq = Problem(q.head, q.objective, q.constraints)
-
   for i = 1:max_iters
 
     # println(length(permset))
@@ -277,8 +269,6 @@ function cutting_plane(p::Problem,
       # println("gapopt = $gap")
       break
     end
-
-    lastt = Problem(q.head, q.objective, q.constraints)
 
     inacct = t.value                             # the inaccurate value of t
     acct = maximum(evaluate.(constraints))       # the accurate value of t

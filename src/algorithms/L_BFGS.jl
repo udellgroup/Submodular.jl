@@ -45,6 +45,8 @@ function L_BFGS(p::Problem,                    # the convex problem
   for k = 0:max_iters
     # println("k = $k")
     # println("norm(q) = $(norm(q))")
+    if k > 1
+    end
     if norm(q) < epsilon
       return x
       break
@@ -65,7 +67,6 @@ function L_BFGS(p::Problem,                    # the convex problem
         end
       else
         k̃ = mod(k-1, m) + 1
-        # println("k̃ = $k̃")
         H = (dot(s[k̃], y[k̃]) / dot(y[k̃], y[k̃])) * eye(n)
         for i = k:-1:k-m+1
           ĩ = mod(i-1, m) + 1
