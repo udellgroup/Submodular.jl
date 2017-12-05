@@ -1,4 +1,4 @@
-using CombiOpt, Convex
+using Submodular, Convex
 using FactCheck
 
 Tol = 1e-3

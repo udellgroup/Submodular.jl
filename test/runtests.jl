@@ -1,4 +1,4 @@
-using CombiOpt
+using Submodular
 
 include("test_algorithms.jl")
 include("test_combinatorial_sets.jl")

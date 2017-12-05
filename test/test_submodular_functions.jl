@@ -1,4 +1,4 @@
-using CombiOpt, LightGraphs
+using Submodular, LightGraphs
 using FactCheck
 
 Tol = 1e-3

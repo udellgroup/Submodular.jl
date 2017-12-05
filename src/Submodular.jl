@@ -1,4 +1,4 @@
-module CombiOpt
+module Submodular
 
 import Convex: AbstractExpr, Variable, Constraint, Constant, Solution, Problem, convert
 import Convex: Vexity, ConstVexity, AffineVexity, ConvexVexity, ConcaveVexity, NotDcp
