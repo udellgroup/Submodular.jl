@@ -54,7 +54,7 @@ include("submodular_functions/customized_submod.jl")
 
 # operators
 include("operators/affine_projection.jl")
-include("operators/dual_to_primal.jl")
+# include("operators/dual_to_primal.jl")
 include("operators/extreme_point.jl")
 include("operators/lovasz_extension_abs.jl")
 include("operators/lovasz_extension.jl")
