@@ -87,11 +87,11 @@ function major_cycle(p::AssocPoly, w::AbstractArray, x::AbstractArray, S::Abstra
         remind0 = deleteat!(collect(1:colnum), redind0)
         S = S[:, remind0]
         colnum = length(remind0)
-        y = affproj(w, S)
+        y = aff_proj(w, S)
         major_cycle(p, w, y, S, Tol)
       end
     else
-      y = affproj(w, S)                 # the point found)
+      y = aff_proj(w, S)                 # the point found)
       y0 = copy(y)
       push!(y0, 1)
       S₁ = [S; ones(1, size(S, 2))]
@@ -108,7 +108,7 @@ function major_cycle(p::AssocPoly, w::AbstractArray, x::AbstractArray, S::Abstra
         remind = deleteat!(collect(1:colnum), redind)
         S = S[:, remind]                           # the new set of points
         x = y                                      # the new candidate
-        y = affproj(w, S)                          # the new optimal solution given S
+        y = aff_proj(w, S)                          # the new optimal solution given S
         y0 = copy(y)
         push!(y0, 1)
         S₁ = [S; ones(1, size(S, 2))]

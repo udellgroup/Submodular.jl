@@ -8,29 +8,41 @@ export greedy, greedy_rand
 TOL = 1e-2
 
 # Computes one solution
-function greedy(F::Function, w::AbstractArray,
-                S = collect(1:length(w))::AbstractArray)
+function greedy(F::Function, x::AbstractArray,
+                S = collect(1:length(x))::AbstractArray)
   @assert F([])[1] == 0 # f should be 0 at the empty set
-  n = length(w)
+  n = length(x)
   @assert length(S) == n
-  i = sortperm(w, rev = true)
+  i = sortperm(x, rev = true)
   V = sort(S)
-  x = zeros(n)
+  w = zeros(n)
   for ii = 1:n
-    x[i[ii]] = F(V[i[1: ii]])[1] - F(V[i[1: ii-1]])[1]
+    w[i[ii]] = F(V[i[1: ii]])[1] - F(V[i[1: ii-1]])[1]
   end
-  return x
+  return w
 end
 
-greedy(F::SubmodFunc, w::AbstractArray) = greedy(x -> evaluate(F, x), w)
+greedy(F::SubmodFunc, x::AbstractArray) = greedy(x -> evaluate(F, x), x)
+
+greedy(f::LovaszExtAtom, x::AbstractArray) = greedy(f.func, x)
+
+function greedy(f::LovaszExtAbsAtom, x::AbstractArray)
+  w = greedy(f.func, abs.(x))
+  for i = 1:length(w)
+    if x[i] < 0
+      w[i] = -w[i]
+    end
+  end
+  return w
+end
 
 # Compute a solution with indexed on the same level set permutated
-function greedy_rand(F::Function, w::AbstractArray, tol = 1e-3 ::Number,
-                    S = collect(1:length(w))::AbstractArray)
+function greedy_rand(F::Function, x::AbstractArray, tol = 1e-3 ::Number,
+                    S = collect(1:length(x))::AbstractArray)
   @assert F([])[1] == 0       # f should be 0 at the empty set
-  n = length(w)
+  n = length(x)
   @assert length(S) == n
-  ordering = sortperm(w, rev = true)
+  ordering = sortperm(x, rev = true)
   pernum = 1
   V = sort(S)
   ordering = V[ordering]      # the indexed reordered in a descending order
@@ -39,7 +51,7 @@ function greedy_rand(F::Function, w::AbstractArray, tol = 1e-3 ::Number,
   level_sets = zeros(2, n)    # the beginning and ending of each level set
   level_sets[1, 1] = 1
   for i = 2:n
-    if w[ordering[i - 1]] - w[ordering[i]] >= tol
+    if x[ordering[i - 1]] - x[ordering[i]] >= tol
     level_sets[2, index] = i-1
     index += 1
     level_sets[1, index] = i
@@ -52,11 +64,11 @@ function greedy_rand(F::Function, w::AbstractArray, tol = 1e-3 ::Number,
     pernum *= factorial(level_sets[2, i] - level_sets[1, i] + 1)
   end
   new_ordering = Int.(new_ordering)
-  x = zeros(n)
+  w = zeros(n)
   for ii = 1:n
-    x[new_ordering[ii]] = F(V[new_ordering[1: ii]])[1] - F(V[new_ordering[1: ii-1]])[1]
+    w[new_ordering[ii]] = F(V[new_ordering[1: ii]])[1] - F(V[new_ordering[1: ii-1]])[1]
   end
-  return x, pernum, new_ordering
+  return w, pernum, new_ordering
 end
 
-greedy_rand(F::SubmodFunc, w::AbstractArray, tol::Number) = greedy_rand(x -> evaluate(F, x), w, tol)
+greedy_rand(F::SubmodFunc, x::AbstractArray, tol::Number) = greedy_rand(x -> evaluate(F, x), x, tol)

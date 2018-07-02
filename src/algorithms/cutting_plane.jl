@@ -37,7 +37,7 @@ function cutting_plane(p::Problem,
   # solve!(q, ECOSSolver(verbose=false, abstol = 1e-6))
   solve!(q, MosekSolver(MSK_IPAR_LOG = 0, MSK_DPAR_INTPNT_CO_TOL_REL_GAP = 1e-3 * abs_tol))
 
-  # Reset the primal variable for warmstart
+  # Reset the primal variable for initialization
   push!(q.solution.primal, q.solution.primal[end])
   q.solution.primal[end - 1] = 0
 
@@ -63,6 +63,7 @@ function cutting_plane(p::Problem,
   rep = 0                                          # the repetition count of a trial point
   cos_num = 0.0
   gap = 0.0
+  gapcount = []
 
   qq = Problem(q.head, q.objective, q.constraints)
 
@@ -82,8 +83,8 @@ function cutting_plane(p::Problem,
       break
     end
 
-    inacct = t.value                             # the inaccurate value of t
-    acct = maximum(evaluate.(constraints))       # the accurate value of t
+    inacct = t.value                             # the value of t returned by the solver
+    acct = maximum(evaluate.(constraints))       # the value of f_{(i)}(x^{(i)})
     cur_sol = var.value[:]
     cur_upper = q.optval - inacct + evaluate(f)[1]
     if cur_upper < upper
@@ -104,11 +105,14 @@ function cutting_plane(p::Problem,
     end
     lower = max(cur_low, lower)
     gap = upper - lower
+    push!(gapcount, gap)
     if gap < abs_tol
       var.value[:] = optsol
+      # println("total = $i")
       # println("gapopt = $gap")
       break
-    # else
+    else
+      # println("i = $i")
       # println("gapsub = $gap")
     end
     if upper < cur_upper
@@ -198,7 +202,8 @@ function cutting_plane(p::Problem,
     end
     iters += 1
   end
-  return optsol
+  # return optsol, iters, gapcount
+  return gapcount
 end
 
 function cutting_plane(p::Problem,

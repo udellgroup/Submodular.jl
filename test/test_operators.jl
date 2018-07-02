@@ -11,9 +11,9 @@ facts("Operators") do
     w1 = [2, 2]
     w2 = [3, 2]
     w3 = [5, 0]
-    @fact affproj(w1, S) --> roughly([2, 2], Tol)
-    @fact affproj(w2, S) --> roughly([2.5, 1.5], Tol)
-    @fact affproj(w3, S) --> roughly([4.5, -0.5], Tol)
+    @fact aff_proj(w1, S) --> roughly([2, 2], Tol)
+    @fact aff_proj(w2, S) --> roughly([2.5, 1.5], Tol)
+    @fact aff_proj(w3, S) --> roughly([4.5, -0.5], Tol)
   end
 
   context("extreme point") do
