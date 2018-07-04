@@ -64,7 +64,7 @@ function get_cv(x::AbstractExpr)
   end
 end
 
-function get_cv(x::Val)
+function get_cv(x::Values)
   return Variable[]
 end
 
@@ -94,7 +94,7 @@ function get_sv(f::SubmodFunc)
   return f.setvariables
 end
 
-function get_sv(x::Val)
+function get_sv(x::Values)
   return []
 end
 
@@ -124,6 +124,6 @@ function get_v(f::SubmodFunc)
   return f.setvariables
 end
 
-function get_v(x::Val)
+function get_v(x::Values)
   return []
 end

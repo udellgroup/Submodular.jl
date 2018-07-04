@@ -28,7 +28,7 @@ end
 
 modular(w::Variable, S::CombiSet) = ModularAtom(w, S)
 
-modular(w::Val, S::CombiSet) = ModularAtom(Constant(w), S)
+modular(w::Values, S::CombiSet) = ModularAtom(Constant(w), S)
 
 function lovasz(F::ModularAtom, x::Variable)
   if length(F.setvariables) == 1

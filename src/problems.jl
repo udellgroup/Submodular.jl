@@ -46,9 +46,9 @@ SCOPEminimize(objective::AbstractExpr, constraints::Constraint...) =
   SCOPEProblem(:minimize, objective, collect(constraints))
 SCOPEminimize{T<:Constraint}(objective::AbstractExpr, constraints::Array{T}=Constraint[]) =
   SCOPEProblem(:minimize, objective, constraints)
-SCOPEminimize(objective::Val, constraints::Constraint...) =
+SCOPEminimize(objective::Values, constraints::Constraint...) =
   minimize(convert(AbstractExpr, objective), collect(constraints))
-SCOPEminimize{T<:Constraint}(objective::Val, constraints::Array{T}=Constraint[]) =
+SCOPEminimize{T<:Constraint}(objective::Values, constraints::Array{T}=Constraint[]) =
   minimize(convert(AbstractExpr, objective), constraints)
 
 # Allow users to simply type maximize
@@ -56,9 +56,9 @@ SCOPEmaximize(objective::AbstractExpr, constraints::Constraint...) =
   SCOPEProblem(:maximize, objective, collect(constraints))
 SCOPEmaximize{T<:Constraint}(objective::AbstractExpr, constraints::Array{T}=Constraint[]) =
   SCOPEProblem(:maximize, objective, constraints)
-SCOPEmaximize(objective::Val, constraints::Constraint...) =
+SCOPEmaximize(objective::Values, constraints::Constraint...) =
   maximize(convert(AbstractExpr, objective), collect(constraints))
-SCOPEmaximize{T<:Constraint}(objective::Val, constraints::Array{T}=Constraint[]) =
+SCOPEmaximize{T<:Constraint}(objective::Values, constraints::Array{T}=Constraint[]) =
   maximize(convert(AbstractExpr, objective), constraints)
 
 # # Allow users to simply type satisfy (if there is no objective)

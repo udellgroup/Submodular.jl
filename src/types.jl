@@ -26,12 +26,12 @@
 # Sets is subtyped by combinatorial sets.
 #############################################################################
 
-export Val, ValOrNothing
+export Values, ValOrNothing
 export SubmodFunc, CombiSet, AllCombiSet, ContiSet, SCOPEModel
 
 # Type of values
-const Val = Union{Number, AbstractArray}
-const ValOrNothing = Union{Val, Void}
+const Values = Union{Number, AbstractArray}
+const ValOrNothing = Union{Values, Void}
 
 ### Combinatorial functions
 abstract type SubmodFunc <: AbstractExpr end
@@ -68,7 +68,7 @@ function evaluate(f::AbstractExpr, w::AbstractArray)
   evaluate(f)
 end
 
-function evaluate(f::AbstractExpr, w::Val...)
+function evaluate(f::AbstractExpr, w::Values...)
   var = get_v(f)
   for i = 1:length(w)
     if isa(var[1], Variable)
