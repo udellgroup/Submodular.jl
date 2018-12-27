@@ -7,7 +7,7 @@ export SetVariable
 export fix!, free!, elements
 export get_cv, get_sv, get_v
 
-type SetVariable <: CombiSet
+mutable struct SetVariable <: CombiSet
   head::Symbol
   id_hash::UInt64
   elements::ValOrNothing

@@ -3,7 +3,7 @@ export in, Perm, fenchel
 
 
 # the set of permutations of 1,...,n
-type Perm <: ContiSet
+mutable struct Perm <: ContiSet
   dim::Int
 end
 

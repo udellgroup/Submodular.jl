@@ -14,14 +14,14 @@ import Base: +, -, *, sign
 export ExprModularity, SubModularity, SuperModularity, Modularity, ConstModularity, NotDetermined
 export +, -, *
 
-# ExprModularity subtypes
+# ExprModularity subtypes, abstract types
 abstract type ExprModularity		        end
-type SubModularity <: ExprModularity		end
-type SuperModularity <: ExprModularity	end
-type Modularity <: ExprModularity       end
-type ConstModularity <: ExprModularity  end
+struct SubModularity <: ExprModularity		end
+struct SuperModularity <: ExprModularity	end
+struct Modularity <: ExprModularity       	end
+struct ConstModularity <: ExprModularity  	end
 
-type NotDetermined <: ExprModularity
+struct NotDetermined <: ExprModularity
 	function NotDetermined()
 		warn("Expression's modularity is not determined. Trying to solve problems with uncertain modularity can lead to unexpected behavior.")
     return new()

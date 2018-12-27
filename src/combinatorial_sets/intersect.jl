@@ -7,7 +7,7 @@ import Base: intersect
 
 export intersect, get_elements
 
-type IntersectAtom <: CombiSet
+mutable struct IntersectAtom <: CombiSet
   head::Symbol
   id_hash::UInt64
   children::Tuple

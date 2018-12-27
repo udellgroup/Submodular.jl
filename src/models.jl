@@ -24,14 +24,14 @@ export get_model
 abstract type PrimalModel <: SCOPEModel end
 
 ### convex problem
-type ConvexProblem <: PrimalModel end
+mutable struct ConvexProblem <: PrimalModel end
 ### Convex function + Lovasz extension
-type ConvexLovasz <: PrimalModel
+mutable struct ConvexLovasz <: PrimalModel
   convex_part::Problem
   lovasz::LovaszExtAtom
 end
 ### Convex function + Lovasz extension on absolute values
-type ConvexLovaszAbs <: PrimalModel
+mutable struct ConvexLovaszAbs <: PrimalModel
   convex_part::Problem
   lovaszabs::LovaszExtAbsAtom
 end
@@ -40,12 +40,12 @@ end
 abstract type DualModel <: SCOPEModel end
 
 ### convex optimization over a polyhedron associated with a submodular function
-type AssocPolyConstrained <: DualModel
+mutable struct AssocPolyConstrained <: DualModel
   prob::Problem
   poly::AssocPoly
 end
 ### linear programming over associated polyhedra
-type LPoverAssocPoly <: DualModel end
+mutable struct LPoverAssocPoly <: DualModel end
 
 function get_model(objective::AbstractExpr, constraints::AbstractArray=Constraint[])
   objective_cv = get_cv(objective)

@@ -31,7 +31,7 @@ export SubmodFunc, CombiSet, AllCombiSet, ContiSet, SCOPEModel
 
 # Type of values
 const Values = Union{Number, AbstractArray}
-const ValOrNothing = Union{Values, Void}
+const ValOrNothing = Union{Values, Nothing}
 
 ### Combinatorial functions
 abstract type SubmodFunc <: AbstractExpr end

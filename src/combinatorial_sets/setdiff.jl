@@ -7,7 +7,7 @@ import Base: setdiff
 
 export setdiff, get_elements
 
-type SetDiffAtom <: CombiSet
+mutable struct SetDiffAtom <: CombiSet
   head::Symbol
   id_hash::UInt64
   children::Tuple

@@ -7,7 +7,7 @@ export WeightedGraph
 export add_edge!, vertice_weights, edge_weights
 export nv, ne, edges, induced_subgraph, connected_components
 
-type WeightedGraph
+struct WeightedGraph
   vertice_weights::Dict{Int64, Number}
   edge_weights::Dict{Tuple{Int64,Int64},Number}
   graph::AbstractGraph

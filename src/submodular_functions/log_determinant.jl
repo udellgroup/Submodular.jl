@@ -8,7 +8,7 @@ import Base.logdet
 export logdet
 export sign, monotonicity, modularity, evaluate
 
-type LogDeterminantAtom <: SubmodFunc
+mutable struct LogDeterminantAtom <: SubmodFunc
   head::Symbol
   id_hash::UInt64
   children::Tuple{AbstractMatrix, CombiSet}

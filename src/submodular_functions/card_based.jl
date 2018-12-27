@@ -7,7 +7,7 @@ export card, compose, CardBasedAtom
 export in
 export sign, monotonicity, modularity, evaluate
 
-type CardBasedAtom{T} <: SubmodFunc
+mutable struct CardBasedAtom{T} <: SubmodFunc
   head::Symbol
   id_hash::UInt64
   children::Tuple{AbstractExpr, SetVariable}
@@ -16,7 +16,7 @@ type CardBasedAtom{T} <: SubmodFunc
   func::T
 end
 
-function CardBasedAtom{T<:Function}(F::T, S::CombiSet)
+function CardBasedAtom(F::Function, S::CombiSet)
   z = Variable(1)
   children = (F(z), S)                           # create an expression
   if F(0) != 0
@@ -26,7 +26,7 @@ function CardBasedAtom{T<:Function}(F::T, S::CombiSet)
   return(CardBasedAtom(:card, hash(children), children, (1, 1), setvariables, F))
 end
 
-function CardBasedAtom{T<:Array{Float64}}(w::T, S::CombiSet)
+function CardBasedAtom(w::Array{Float64}, S::CombiSet)
   children = (Constant(w), S)                           # create an expression
   setvariables = get_sv(S)
   if length(setvariables) != 1

@@ -7,7 +7,7 @@ import Base: union
 
 export union, get_elements
 
-type UnionAtom <: CombiSet
+mutable struct UnionAtom <: CombiSet
   head::Symbol
   id_hash::UInt64
   children::Tuple

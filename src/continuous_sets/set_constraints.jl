@@ -4,7 +4,7 @@ export SetConstraint
 export in
 
 ### Set constraint
-type SetConstraint{T <: ContiSet} <: Constraint
+mutable struct SetConstraint{T <: ContiSet} <: Constraint
   head::Symbol
   id_hash::UInt64
   lhs::AbstractExpr
@@ -13,7 +13,7 @@ type SetConstraint{T <: ContiSet} <: Constraint
   dual::ValOrNothing
 end
 
-function SetConstraint{T <: ContiSet}(lhs::Variable, rhs::T)
+function SetConstraint(lhs::Variable, rhs::ContiSet)
   id_hash = hash((lhs, rhs, :(==)))
   return SetConstraint(:(set), id_hash, lhs, rhs, (1, 1), nothing)
 end
@@ -26,7 +26,7 @@ function get_sv(constraint::SetConstraint)
   return get_sv(constraint.lhs)
 end
 
-in{T <: ContiSet}(lhs::Variable, rhs::T) = SetConstraint(lhs, rhs)
+in(lhs::Variable, rhs::ContiSet) = SetConstraint(lhs, rhs)
 
 # the fenchel conjugate of a set indicator function
 fenchel(setconstraint::SetConstraint, w::AbstractArray) = fenchel(setconstraint.rhs, w)

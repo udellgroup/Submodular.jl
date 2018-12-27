@@ -7,7 +7,7 @@
 export submod
 export sign, monotonicity, modularity, evaluate
 
-type CustomizedSubmodAtom <: SubmodFunc
+mutable struct CustomizedSubmodAtom <: SubmodFunc
   head::Symbol
   id_hash::UInt64
   children::Tuple{Function, SetVariable}

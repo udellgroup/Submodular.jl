@@ -6,7 +6,7 @@
 export grad
 export sign, curvature, monotonicity, evaluate
 
-type GradientAtom <: AbstractExpr
+mutable struct GradientAtom <: AbstractExpr
   head::Symbol
   id_hash::UInt64
   children::Tuple{AbstractExpr}

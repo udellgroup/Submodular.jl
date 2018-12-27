@@ -7,7 +7,7 @@ export lovasz, LovaszExtAbsAtom
 export sign, monotonicity, curvature, evaluate
 export ConvexLovaszAbs
 
-type LovaszExtAbsAtom <: AbstractExpr
+mutable struct LovaszExtAbsAtom <: AbstractExpr
   head::Symbol
   id_hash::UInt64
   children::Tuple{AbstractExpr, Variable}

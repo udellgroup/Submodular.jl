@@ -22,52 +22,52 @@ export in, fenchel
 
 abstract type AssocPoly <: ContiSet end
 
-type SubmodPoly{T} <: AssocPoly
+mutable struct SubmodPoly{T} <: AssocPoly
   head::Symbol
   F::T              # the submodular function
   V::AbstractArray # indexes of the base set
 end
 
-function SubmodPoly{T<:SubmodFunc}(F::T)
+function SubmodPoly(F::SubmodFunc)
   @assert evaluate(F, [])[1] == 0
   x = get_sv(F)[1]
   V = x.baseset
   return(SubmodPoly(:subpoly, F, V))
 end
 
-type BasePoly{T} <: AssocPoly
+mutable struct BasePoly{T} <: AssocPoly
   head::Symbol
   F::T
   V::AbstractArray
 end
 
-function BasePoly{T<:SubmodFunc}(F::T)
+function BasePoly(F::SubmodFunc)
   @assert evaluate(F, [])[1] == 0
   x = get_sv(F)[1]
   V = x.baseset
   return(BasePoly(:basepoly, F, V))
 end
 
-type PosPoly{T} <: AssocPoly
+mutable struct PosPoly{T} <: AssocPoly
   head::Symbol
   F::T
   V::AbstractArray
 end
 
-function PosPoly{T<:SubmodFunc}(F::T)
+function PosPoly(F::SubmodFunc)
   @assert evaluate(F, [])[1] == 0
   x = get_sv(F)[1]
   V = x.baseset
   return(PosPoly(:pospoly, F, V))
 end
 
-type SymPoly{T} <: AssocPoly
+mutable struct SymPoly{T} <: AssocPoly
   head::Symbol
   F::T
   V::AbstractArray
 end
 
-function SymPoly{T<:SubmodFunc}(F::T)
+function SymPoly(F::SubmodFunc)
   @assert evaluate(F, [])[1] == 0
   x = get_sv(F)[1]
   V = x.baseset

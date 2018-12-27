@@ -10,9 +10,9 @@
 
 export SCOPEProblem, SCOPEminimize, SCOPEmaximize, satisfy, add_constraints!
 
-const Float64OrNothing = Union{Float64,Void}
+const Float64OrNothing = Union{Float64, Nothing}
 
-type SCOPEProblem{T <: SCOPEModel}
+mutable struct SCOPEProblem{T <: SCOPEModel}
   head::Symbol
   objective::AbstractExpr
   constraints::AbstractArray
@@ -44,21 +44,21 @@ SCOPEProblem(head::Symbol, objective::AbstractExpr, constraints::Constraint...) 
 # Allow users to simply type minimize
 SCOPEminimize(objective::AbstractExpr, constraints::Constraint...) =
   SCOPEProblem(:minimize, objective, collect(constraints))
-SCOPEminimize{T<:Constraint}(objective::AbstractExpr, constraints::Array{T}=Constraint[]) =
+SCOPEminimize(objective::AbstractExpr, constraints::Array{<:Constraint}=Constraint[]) =
   SCOPEProblem(:minimize, objective, constraints)
 SCOPEminimize(objective::Values, constraints::Constraint...) =
   minimize(convert(AbstractExpr, objective), collect(constraints))
-SCOPEminimize{T<:Constraint}(objective::Values, constraints::Array{T}=Constraint[]) =
+SCOPEminimize(objective::AbstractExpr, constraints::Array{<:Constraint}=Constraint[]) =
   minimize(convert(AbstractExpr, objective), constraints)
 
 # Allow users to simply type maximize
 SCOPEmaximize(objective::AbstractExpr, constraints::Constraint...) =
   SCOPEProblem(:maximize, objective, collect(constraints))
-SCOPEmaximize{T<:Constraint}(objective::AbstractExpr, constraints::Array{T}=Constraint[]) =
+SCOPEmaximize(objective::AbstractExpr, constraints::Array{<:Constraint}=Constraint[]) =
   SCOPEProblem(:maximize, objective, constraints)
 SCOPEmaximize(objective::Values, constraints::Constraint...) =
   maximize(convert(AbstractExpr, objective), collect(constraints))
-SCOPEmaximize{T<:Constraint}(objective::Values, constraints::Array{T}=Constraint[]) =
+SCOPEmaximize(objective::AbstractExpr, constraints::Array{<:Constraint}=Constraint[]) =
   maximize(convert(AbstractExpr, objective), constraints)
 
 # # Allow users to simply type satisfy (if there is no objective)
@@ -68,6 +68,6 @@ SCOPEmaximize{T<:Constraint}(objective::Values, constraints::Array{T}=Constraint
 # satisfy(constraint::Constraint) = satisfy([constraint])
 
 # +(constraints, constraints) is defined in constraints.jl
-add_constraints!{T<:Constraint}(p::SCOPEProblem, constraints::Array{T}) = +(p.constraints, constraints)
+add_constraints!(objective::AbstractExpr, constraints::Array{<:Constraint}=Constraint[]) = +(p.constraints, constraints)
 add_constraints!(p::SCOPEProblem, constraint::Constraint) = add_constraints!(p, [constraint])
 add_constraint! = add_constraints!

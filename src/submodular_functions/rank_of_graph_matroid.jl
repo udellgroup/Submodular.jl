@@ -7,7 +7,7 @@
 export rank_of_graph_matroid
 export sign, monotonicity, modularity, evaluate
 
-type RankOfGraphicMatroidAtom <: SubmodFunc
+mutable struct RankOfGraphicMatroidAtom <: SubmodFunc
   head::Symbol
   id_hash::UInt64
   children::Tuple{WeightedGraph, CombiSet}
